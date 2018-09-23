@@ -14,6 +14,18 @@ header {
   color: #EE0000;
 }
 
+a:link {
+  color: #EE0000
+}
+
+a:visited {
+    color: #EE0000;
+}
+
+a:hover {
+    color: hotpink;
+}
+
 nav {
   text-align: right;
   color: #EE0000;
@@ -32,7 +44,7 @@ footer {
   padding: 1.2rem 0;
   border-top: 0.2rem solid #EE0000;
   font-size: 1.2rem;
-  color: #555;
+  color: #880000;
 }
 
 h1 {
@@ -46,7 +58,7 @@ h2 {
 article .header {
   font-size: 1.4rem;
   font-style: italic;
-  color: #555;
+  color: #AA0000;
 }
 
 .logo a {
