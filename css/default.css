@@ -1,34 +1,34 @@
 html {
   font-size: 62.5%;
-  color: #EE0000;
+  color: #FFFDDB;
 }
 
 body {
   font-size: 1.6rem;
-  color: #EE0000;
+  color: #FFFDDB;
   background-color: #000033;
 }
 
 header {
-  border-bottom: 0.2rem solid #EE0000;
-  color: #EE0000;
+  border-bottom: 0.2rem solid #FFFDDB;
+  color: #FFFDDB;
 }
 
 a:link {
-  color: #EE0000
+  color: #FFFDDB
 }
 
 a:visited {
-    color: #EE0000;
+    color: #FFFDDB;
 }
 
 a:hover {
-    color: hotpink;
+    color: #EECEAC;
 }
 
 nav {
   text-align: right;
-  color: #EE0000;
+  color: #FFFDDB;
 }
 
 nav a {
@@ -42,9 +42,9 @@ nav a {
 footer {
   margin-top: 3rem;
   padding: 1.2rem 0;
-  border-top: 0.2rem solid #EE0000;
+  border-top: 0.2rem solid #FFFDDB;
   font-size: 1.2rem;
-  color: #880000;
+  color: #666326;
 }
 
 h1 {
@@ -58,12 +58,12 @@ h2 {
 article .header {
   font-size: 1.4rem;
   font-style: italic;
-  color: #AA0000;
+  color: #FFFDDB;
 }
 
 .logo a {
   font-weight: bold;
-  color: #EE0000;
+  color: #FFFDDB;
   text-decoration: none;
 }
 
