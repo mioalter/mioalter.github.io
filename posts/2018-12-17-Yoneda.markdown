@@ -1,0 +1,449 @@
+---
+title: Yoneda, Currying, and Fusion
+---
+\newcommand{\tC}{\text{C}}
+\newcommand{\D}{\text{D}}
+\newcommand{\E}{\text{E}}
+\newcommand{\nto}{\Rightarrow}
+\newcommand{\bb}{\mathbb}
+\newcommand{\Hom}{\text{Hom}}
+\newcommand{\Set}{\text{Set}}
+\newcommand{\uncurry}{\text{uncurry}}
+\newcommand{\curry}{\text{curry}}
+\newcommand{\Ran}{\text{Ran}}
+
+
+The Yoneda lemma is a not at all obvious, but totally fundamental,
+result in category theory that makes frequent appearances in programming, too.
+Luckily, it's not actually hard to prove and makes intuitive sense once you
+see how it works.
+In programming terms, it constructs an isomorphism between a datatype
+and a related datatype of functions which gives us ways
+to optimize our programs by doing a kind of map and flatmap fusion:
+we turn iterated maps or flatmaps into function
+composition, compose, then evaluate the function we've built up once at the end.
+
+In this post, we'll prove(-ish) the Yoneda lemma,
+do a quick example of map fusion, then look at currying of functions
+and functors in terms of Yoneda.
+The punchline will be a derivation of the right Kan extension of a functor
+using Yoneda and currying.
+The Codensity monad is a special case of this.
+
+Fortunately, this all requires only basic category theory, nothing fancy.
+We won't work out every detail, but we will go through
+all the steps and point out what is left to show at each stage.
+
+I'll assume familiarity with categories, functors, and natural transformations,
+but start with a dictionary between math and
+programming and will give the programming analogues of the math throughout.
+Code will be in aspirational Scala:
+Scala with the `forall` keyword borrowed from Haskell.
+
+### Math <> Programming ###
+
+Here is everything we'll need. Feel free to skip this on a first pass and
+refer to it as needed.
+
+* we'll write composition as juxtaposition $gf$ or with a dot $g\cdot f$
+if things are getting cluttered. In programming, well write it as
+juxtaposition `g f` with a space
+* we'll write $\Set$ for the category of sets:
+the objects are sets, the arrows are functions,
+composition is composition of functions.
+In programming terms, these are types, functions between types,
+and composition of functions
+* we'll write C for a general category, $A, B$ for objects of C,
+$f: A \to B$ for _an_ arrow from $A$ to $B$ and $\tC(A,B)$ for
+the _set_ of arrows from $A$ to $B$.
+The typography is a little subtle here: $\tC$ is not italicized
+whereas $A$ and $B$ are. It will be clear in context when we mean a whole
+category and when we mean a particular object of that category
+* an arrow $f: A \to B$ corresponds to a function `f: A => B`
+* the set $\tC(A, B)$ corresponds to the set or type `A => B`
+* we'll write $F: \tC \to \D$ for a functor from a category C to a category
+D, $F(A)$ for $F$ applied to $A$ and $F(f): F(A) \to F(B)$ for $F$ applied to
+$f: A \to B$
+* functors $F: \Set \to\Set$ correspond to functors `F[_]` in programming;
+$F(A)$ to `F[A]` and $F(f)$ to `F.map(f): F[A] => F[B]`. As we know,
+`F.map` must satisfy `F.map(f).map(g) == F.map(gf)`
+* given a category $\tC$ and an object $A$, we'll write $\tC(A, -)$
+for the _hom functor_ $\tC \to \Set$ which sends an object $B$
+to the set of arrows $\tC(A, B)$ and an
+arrow $f: B\to C$ to the function $f_\ast:\tC(A,B)\to \tC(A, C)$
+given by composing with $f$
+* $\tC(A,-)$ corresponds to `forall B . A => B`,
+which is the Reader functor `Reader[A, B]` for a fixed type `A`
+and variable type `B`
+* $f_\ast: \tC(A, B)\to \tC(A, C)$ corresponds to
+`Reader[A,B].map(f)` where `f: B => C` which is indeed
+defined to be composing with `f`
+* given two functors $F,G:\tC\to\D$, we'll write $\eta: F\nto G$ for a
+natural transformation from $F$ to $G$ and $\Hom(F,G)$
+for the set of natural transformations from $F$ to $G$.
+A natural transformation has one arrow for every object $A$ and
+we'll write $\eta_A: F(A) \to G(A)$ for the $A$ component of $\eta$
+* a natural transformation $\eta: F\nto G$ corresponds to
+a polymorphic function `forall A . η[A]: F[A] => G[A]` which satisfies
+`η[B] F.map(f) == G.map(f) η[A]`, or equivalently,
+[makes a square commute][NAT].
+For example, [`headOption`][HEAD] is a natural transformation
+from `List` to `Option`
+* the set $\Hom(F,G)$ corresponds to the type `forall A . F[A] => G[A]`
+of polymorphic functions which similarly make a square commute
+* we'll write $\D^{\tC}$ for the category whose objects are functors
+$C\to D$ and arrows are natural transformations.
+In this case $\D^{\tC}(F,G)$ is $\Hom(F,G)$ and we'll write either.
+
+Navigating between corresponding ideas in math and programming
+is a fraught endeavor: definitions and assumptions may subtley differ
+and everyone has strong feelings about notation.
+I hope that these choices make this material comprehensible
+to the largest possible audience.
+The reason not to just write everything in code is that the math
+concepts are often more general and math has explicit and precise
+definitions where programming has laws that can go unmentioned or unchecked.
+As we'll see, we'll need this precision ahead.
+
+### The Yoneda Lemma ###
+
+The setup is:
+we have a category $\tC$, an object $A$, and we make the hom functor $\tC(A, -)$.
+Given another set-valued functor $G: \tC \to \Set$,
+let's write $Y_G(A) = \Hom(\tC(A, -), G)$
+for the set of natural transformations $\tC(A, -) \nto G$.
+In programming notation, we can write $Y_G(A)$ as
+`forall B . (A => B) => G[B]`.
+It may not be a huge surprise that this is exactly `Yoneda[G[_], A]`
+[in Cats][YoCats].
+
+The Yoneda lemma first constructs a bijection of sets $\Phi_A:Y_G(A) \to G(A)$.
+It then says that, letting $A$ vary,
+$\Phi: Y_G\nto G$ defines a natural isomorphism of functors.
+We'll unravel these statements as we go.
+
+First, we construct $\Phi_A$ and its inverse $\Psi_A$.
+The function $\Phi_A: Y_G(A) \to G(A)$ is defined by $\Phi_A(\eta) = \eta_A(1_A)$.
+Let's unpack this: a natural transformation $\eta: \tC(A, -) \nto G$
+has one component $\eta_B: \tC(A, B) \to G(B)$ for every object $B$;
+choosing $B$ to be $A$, there is a canonical element inside $\tC(A,A)$,
+the identity $1_A$; applying $\eta_A$ to that, we get an element of $G(A)$.
+
+Next, $\Phi_A$ is a bijection of sets.
+This sounds bonkers:
+a natural transformation is a function $\eta_B: \tC(A,B)\to G(B)$ _for every_ $B$.
+This looks like much more information than the value of one of those functions
+on a single input.
+It turns out that being a natural transformation is hard:
+the commutative diagram that a natural transformation has to satisfy means
+that the components $\eta_B$ for different $B$ have to fit together in the right
+way. The Yoneda lemma says that, in fact,
+for $\eta$ to be a natural tranformation,
+these requirements are so restrictive that all of the $\eta_B$ are
+entirely determined by the single value $\eta_A(1_A)$ in $G(A)$.
+
+Let's construct the inverse $\Psi_A$ of $\Phi_A$.
+Since $A$ is fixed for this part and for $x\in G(A)$,
+$\Psi_A(x)$ is a natural tranformation which itself has a component for every
+$B$, we'll drop the $A$ subscript for now.
+So, given $x = \Phi(\eta)\in G(A)$, for $\Psi(x)$ to be inverse to $\Phi$,
+$\Psi(x)_A(1_A)$ must be $x$.
+This tells the value of one component of $\Psi(x)$ on a single input.
+We can define the entire rest of $\Psi(x)$ in one fell swoop.
+
+The trick is that we can write $g: A \to B$ as $g_\ast(1_A)$ for any $g$
+because $g_\ast(1_A) = g\cdot 1_A = g$.
+Now, for $\Psi(x)$ to be a natural transformation $\tC(A, -)\nto G$,
+it must satisfy
+
+$$\Psi(x)_B \cdot g_\ast = G(g)\cdot \Psi(x)_A$$
+
+(Drawing the diagram for yourself really helps here.)
+Evaluating both sides on $1_A$, we get
+
+$\Psi(x)_B(g_\ast 1_A) = \Psi(x)_B(g)$
+
+on the left and
+
+$$G(g)(\Psi(x)_A(1_A)) = G(g)(x)$$
+
+on the right, since $\Psi(x)_A(1_A) = x$.
+So,we have no choice but to define $\Psi(x)_B(g) = G(g)(x)$.
+In programming: for `x: G[A]`,
+`Ψ(x)` is the polymorphic function `g => x.map(g)` for `g: A => B`.
+
+The remaining work is to show that $\Psi(x)$ is a natural transformation,
+that is, for any $g: B\to C$, that
+
+$$\Psi(x)_C \cdot g_\ast = G(g)\cdot \Psi(x)_B$$
+
+not only for arrows $g$ whose domain is $A$
+and not only when we evaluate on a specific input.
+Explicitly, we have to show that given any $f: A \to B$,
+we have $\Psi(x)_C(g_\ast(f)) = G(g)(\Psi(x)_B(f))$.
+
+As claimed, once we know that $\Psi(x)_A$ sends $1_A$ to $x$,
+everything else is entirely determined by the fact that it has to be
+a natural transformation.
+
+Brining back the subscripts, we defined $\Psi_A$, but
+still have to show that $\Psi_A$ and $\Phi_A$ really are inverses.
+This is what tells us that both are bijections.
+
+So far, we have a functor $G$ and, for each $A$, a set $Y_G(A)$
+and a bijection $\Phi_A: Y_G(A) \to G(A)$.
+Next, we'll see that $Y_G$ is a functor $\tC \to \Set$.
+This means that the sets $Y_G(A)$ for varying $A$ are not
+unrelated, we also get, for every arrow $f: A \to B$,
+a function $Y_G(A) \to Y_G(B)$
+in a way that preserves composition and identity arrows.
+
+Once we understand $Y_G$ as a functor,
+we'll get to the second part of the Yoneda lemma:
+that $\Phi_A$ is _natural_ in $A$.
+This means that the $\Phi_A$ are the components of a natural transformation
+$\Phi: Y_G\nto G$.
+Since we've already shown that every $\Phi_A$ is an isomorphism,
+this says that $\Phi$ is a natural isomorphism.
+So it is not just an isomorphism of sets for each $A$,
+it is an isomorphism of functors.
+
+First, that $Y_G$ is a functor: given an arrow $g: A \to B$,
+we get a function $Y_G(g): Y_G(A) \to Y_G(B)$ by precomposing with $g$.
+More explicitly: given a natural transformation $\eta: C(A,-)\nto G$,
+we get a natural transformation $\tC(B,-)\nto G$ whose $C$ component
+$\tC(B, C) \to G(C)$ sends $f \in \tC(B,C)$ to $\eta_C(fg)$.
+That is, we take $f$, precompose with $g$ to get an element of $C(A, C)$,
+and apply $\eta_C$ to that.
+In programming terms, we just defined `Yoneda[G].map(g)`.
+
+The work here is first to show that $Y_G(g)(\eta)$ really does
+define a natural transformation and then that, with this definition of $Y_G$
+on arrows, $Y_G$ really is a functor: sends identities to identities and
+composition to composition.
+
+Finally: $\Phi$ is a natural transformation.
+Now that we know what $Y_G(g)$
+does on an arrow $g: A \to B$, the work here is to show that
+$G(g)\cdot \Phi_A = \Phi_B \cdot Y_G(g)$,
+or in diagrams, that the square with these
+four functions as sides commutes.
+The same thing in terms of $\Psi$ is
+$\Psi_B\cdot G(g) = Y_G(g)\cdot \Psi_A$
+which, in code, is
+
+```Ψ[B] G.map(g) == Yoneda[G].map(g) Ψ[A]```
+
+So we can `_.map(g)` and apply `Ψ` in either order.
+
+So, having hand-waved ourselves to the end:
+$\Phi_A$ is a bijection for every $A$ and
+$\Phi: Y_G \nto G$ is a natural isomorphism.
+That is!
+
+### Map Fusion ###
+
+Let's see how to use Yoneda to do map fusion.
+Taking `G` to be `List`, our `Yoneda` datatype is
+
+```Yoneda[List, A] = forall B. (A => B) => List[B]```
+
+and `Ψ[A]: List[A] => Yoneda[List, A]`
+sends a list `ls: List[A]` to the function `f => ls.map(f)` for any `f: A => B`.
+
+Going the other way,
+`Φ[A]: Yoneda[List, A] => List[A]`
+evaluates a polymorphic function on `identity[A]`.
+It should again be immediately clear that `Φ[A]Ψ[A]: List[A] => List[A]`
+is the identity function and not at all clear that the composition
+the other way is the identity, but that's we just showed.
+
+Now, given a list `ls: List[A]`,
+and functions `f: A => B, g: B => C, h: C => D`,
+we know that
+
+```Ψ[D](ls.map(f).map(g).map(h)) == Ψ[A](ls).map(f).map(g).map(h)```
+
+because the lemma tells us that we can map functions and apply `Ψ`
+in either order.
+Moreover, since `Φ` is inverse to `Ψ`, we have
+
+```ls.map(f).map(g).map(h) == Φ[D] Ψ[A](ls).map(f).map(g).map(h)```
+
+So, to compute `ls.map(f).map(g).map(h)`,
+we can apply `Ψ`, map on the `Yoneda` side, then apply `Φ` to get back.
+
+Appyling `Ψ`, we get
+
+```(Ψ[A](ls)).map(f).map(g).map(h) = (k => ls.map(khgf))```
+
+because mapping on the `Yoneda` side is precomposing.
+Then, applying `Φ` to this, we get `ls.map(hgf)`
+because `Φ` is evaluation on the identity function.
+Lo and behold, our maps are fused.
+
+### Currying Functions ###
+
+Currying is the isomorphism
+$\Set(C\times A, B) \cong \Set(C,B^A)$
+between sets of functions defined by $\curry(f)(c) = f(c,-)$
+where $B^A$ is the set of functions $A \to B$.
+In programming notation,
+`curry: ((C,A) => B) => (C => A => B)`
+
+So far, we haven't done any category theory yet. We can verify that this is
+a bijection by writing down a function in the other direction and checking that
+they are inverses to one another.
+
+The Yoneda view of this is that $\Set(-, B^A)$ is a hom-functor $\Set \to \Set$,
+$\Set(- \times A, B)$ is another $\Set$-valued functor, and _uncurrying_ defines
+an element
+
+$$\uncurry \in \Hom(\Set(-, B^A), \Set(-\times A, B))$$
+
+which is a natural isomorphism.
+We are using the _contravariant_ version of Yoneda here:
+both functors turn functions $A \to B$ into functions $F(B) \to F(A)$.
+Everything else works the same.
+
+As before, there is work left to do: we have to verify
+that both of these really are functors and the currying really is a natural
+transformation.
+
+The Yoneda bijection sends
+the uncurrying natural isomorphism to an element
+$\uncurry(1_{B^A})\in \Set(B^A\times A, B)$: the evaluation map $eval(f,a) = f(a)$.
+Moreover, the evaluation map satisfies a universal property:
+every function $f: C\times A \to B$
+can be written as the composition
+of $\curry(f)\times 1_A: C\times A \to B^A\times A$ with
+$eval: B^A \times A \to B$.
+This is exercise 2.3.iii in CTIC.
+
+### Currying Functors ###
+
+We can also curry in the category of functors $\Set\to \Set$.
+Given two functors $F,G:\Set\to\Set$,
+functor composition $G\cdot F$ plays the role of the cartesian product
+$A\times B$ of sets.
+There _is_ a functor $\Ran_GF$ which corresponds to the arrows
+in $\Set^{\Set}$ from $F$ to $G$ so plays the role of $B^A$,
+but it's not immediately obvious what it is:
+the natural transformations $F\nto G$
+are not themselves a functor $\Set\to\Set$ in any obvious way.
+Nonetheless, we can use the Yoneda lemma to get a handle on it.
+
+Accepting that the functor $\Ran_GF:\Set\to \Set$ exists,
+currying is a natural isomorphism
+$\Hom(-\cdot F,G)\cong \Hom(-, \Ran_FG)$.
+Here again we have a hom-functor $\Hom(-, \Ran_FG)$
+from $\Set^\Set \to \Set$ which sends a functor $H$ to the
+set of natural transformations $H \nto \Ran_FG$
+and another $\Set$-valued functor $\Hom(-\cdot F,G)$
+which sends a functor $H$ to the set of natural transformations
+$HF \nto G$.
+
+With a judicious choice of $H$, we can use the Yoneda lemma to get our
+hands on $\Ran_GF$: let's choose $H:\Set\to\Set$ to
+be a hom-functor $\Set(A,-)$.
+Now, currying gives us an
+isomorphism
+
+$$\Hom(\Set(A,F(-)), G)\cong \Hom(\Set(A,-), \Ran_GF)$$
+
+where $\Set(A,F(-))$ is exactly the functor $\Set(A,-)$ composed with $F$.
+In programming this is `forall B. A => F[B]` which is
+`ReaderT` or [Kleisli][KLEISLI] in Cats.
+
+Now we are in good shape: we have natural bijections
+
+$$\Ran_GF(A) \cong \Hom(\Set(A,-), \Ran_GF)\cong\Hom(\Set(A,F(-)), G)$$
+
+where the first is the Yoneda bijection and the second is uncurrying.
+So this gives us _a_ description of $\Ran_GF$: whatever it is,
+by Yoneda, it is naturally isomorphic to the functor $\Set \to\Set$
+which sends a set $A$ to the set of natural transformations $\Set(A,F(-)) \nto G$.
+In programming notation: `forall B. (A => F[B]) => G[B]`
+which is exactly [`Ran` in Haskell][RAN].
+
+There are two special cases of this construction:
+when $F$ is the identity functor and when $F$ is $G$.
+In the first case, we get back our `Yoneda` datatype from before;
+in the second case, we get the [Codensity monad][CODEN]
+`forall B. (A => F[B]) => F[B]`.
+If `F` is already a monad, then the Codensity monad is a monad transformer,
+but it is defined and is a monad even if `F` is only a functor.
+
+Similar to our `List` example from before,
+replacing `F` by its Codensity monad lets us replace iterated
+`flatMap`s with function composition so does a kind of `flatmap` fusion.
+We won't work out an example here, but see the links below.
+
+### Conclusion ###
+
+That's it! The Yoneda lemma, currying, and fusion.
+Here is a list of comments and things we left out.
+
+A few more pieces of Yoneda that we didn't mention:
+
+* $\Phi$ is _also_ natural in $G$
+* the Yoneda embedding
+* some other nice corollaries, like,
+that $A\cong B$ if and only if $C(A, -)\cong C(B,-)$
+
+If you made it this far, you'll love this talk by [Emily Riehl][RIEHL]
+on [categorifying cardinal arithmetic][CCA] (pdf, slides).
+
+We can talk about currying in these cases because
+$\Set^{\Set}$ has a [bunch of extra structure][CMC] and
+$\Set$ has [even more][CCC].
+
+$\Ran_GF$ is a general construction called the _right Kan extension_ of $F$
+along $G$ that, given $F: \tC\to \E$ and $G: \tC\to \D$ produces a functor
+$\Ran_GF: \D\to \E$ which extends $F$ to $\D$ along $G$.
+There is a _left_ Kan extension as well.
+Exercise 6.1.iii in CTIC has you work out examples of both by hand.
+A good followup is to work out what the limit and colimit formulas from the
+next section give for those examples.
+
+I gave a talk, Difference Lists and the Codensity Monad,
+a while ago at the Bay Area Haskell Meetup:
+[video][VID] and [slides and code][SLIDESNCODE].
+In it, I go through an example of replacing a monad by its Codensity monad
+to turn an O($n^2$) program into an O($n$) program.
+There is a complete list of references in those slides,
+but the highlights are below.
+
+These ideas appear elsewhere, too: whatever [profunctor optics][PRO] are,
+they use the Yoneda lemma to efficiently traverse nested datastructures.
+That hopefully sounds not totally unreasonable now.
+
+Some fair questions at this point are:
+What actually _is_ a Kan extension?
+And what about [Coyoneda][COYO]?
+These are great questions!....for a another time!
+
+### References ###
+
+* [Category Theory in Context][CTIC] (pdf) by [Riehl][RIEHL]
+* [Notions of Computation as Monoids][NOC] by Rivas & Jaskelioff
+* [Kan Extensions for Program Optimisation Or: Art and Dan Explain an Old Trick][HINZE] (pdf) by Hinze
+
+[PRO]: https://bartoszmilewski.com/2017/07/07/profunctor-optics-the-categorical-view/
+[RIEHL]: https://twitter.com/emilyriehl
+[COYO]: https://github.com/typelevel/cats/blob/master/free/src/main/scala/cats/free/Coyoneda.scala
+[CCA]: http://www.math.jhu.edu/~eriehl/arithmetic.pdf
+[HEAD]: https://www.scala-lang.org/api/current/scala/collection/immutable/List.html#headOption:Option[A]
+[NAT]: https://en.wikipedia.org/wiki/Natural_transformation
+[KLEISLI]: https://github.com/typelevel/cats/blob/774fb51d1365e1adef7fa71f09b1410941264f60/core/src/main/scala/cats/data/Kleisli.scala
+[HINZE]: https://www.cs.ox.ac.uk/ralf.hinze/Kan.pdf
+[VID]: https://begriffs.com/posts/2016-02-04-difference-lists-and-codennsity.html
+[SLIDESNCODE]: https://github.com/mioalter/talks/tree/master/Haskell_Meetup_Jan_13_2016
+[CODEN]: https://hackage.haskell.org/package/kan-extensions-5.2/docs/src/Control.Monad.Codensity.html#Codensity
+[RAN]: https://hackage.haskell.org/package/kan-extensions-5.2/docs/src/Data.Functor.Kan.Ran.html#Ran
+[YoCats]: https://github.com/typelevel/cats/blob/master/free/src/main/scala/cats/free/Yoneda.scala
+[CCC]: https://en.wikipedia.org/wiki/Cartesian_closed_category
+[CMC]: https://en.wikipedia.org/wiki/Closed_monoidal_category
+[LS]: https://ncatlab.org/nlab/show/locally+small+category
+[CTIC]: http://www.math.jhu.edu/~eriehl/context.pdf
+[NOC]: https://arxiv.org/abs/1406.4823
