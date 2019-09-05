@@ -8,13 +8,12 @@ title: Equivalence Relations and the Best Group Ever
 
 
 Equivalence relations are ubiquitous in math and programming:
-they are behind a lot of familiar things.
-We’ll see some examples followed by a nice application—how to turn a commutative
-monoid into a group—and some examples of that, too.
+we’ll see some familiar examples followed by a nice application—how to turn a
+commutative monoid into a group—and some examples of that, too.
 
-We start quite gently then pick up momentum;
-hopefully this is useful and interesting for programmers with a wide range of
-mathematical experience.
+We'll start quite gently then pick up momentum;
+hopefully this is useful and interesting for programmers with a wide range
+of mathematical experience.
 
 ### Modular Arithmetic ###
 

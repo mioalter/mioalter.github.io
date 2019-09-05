@@ -29,8 +29,8 @@
     </section>
     <section>
         
-<p>Equivalence relations are ubiquitous in math and programming: they are behind a lot of familiar things. We’ll see some examples followed by a nice application—how to turn a commutative monoid into a group—and some examples of that, too.</p>
-<p>We start quite gently then pick up momentum; hopefully this is useful and interesting for programmers with a wide range of mathematical experience.</p>
+<p>Equivalence relations are ubiquitous in math and programming: we’ll see some familiar examples followed by a nice application—how to turn a commutative monoid into a group—and some examples of that, too.</p>
+<p>We’ll start quite gently then pick up momentum; hopefully this is useful and interesting for programmers with a wide range of mathematical experience.</p>
 <h3 id="modular-arithmetic">Modular Arithmetic</h3>
 <p>First, informally: to do arithmetic mod 7, we add, subtract, and multiply integers as usual, but with the understanding that if we have two integers whose difference is a multiple of 7, we consider them the same in the same way that we consider 1/2 and 2/4 as the same. So, 0, 7, 14, -7, -28 are all different ways of writing the same number in arithmetic mod 7. Any number mod 7 is the same as one of the numbers between 0 and 6, inclusive because we can always add or subtract enough 7s to get into that interval so we usually choose one of those to make our lives easier.</p>
 <p>Here is a nice visual way to think about this: take the number line, mark off all the integers—positive, negative, and zero—and wind it into an infinite vertical spiral so that <span class="math inline">… − 14,  − 7, 0, 7, 14…</span> are stacked on top of each other, <span class="math inline">… − 13,  − 6, 1, 8, 15, …</span> are stacked on top of each other, <span class="math inline">… − 12,  − 5, 2, 9, 16, …</span> are stacked on top of each other, etc.</p>
