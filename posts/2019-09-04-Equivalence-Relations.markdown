@@ -215,7 +215,7 @@ $(a, b) + (c, d) := (a + c, b + d)$.
 Define an equivalence relation on $\N\times N$ by $(a,b) \sim (a + n, b + n)$
 for any $n \in \N$.
 
-Visually: consider the $xy$-plane and consider the points with integer
+Visually: take the $xy$-plane and consider the points with integer
 coordinates that are both $\geq 0$, the first quadrant.
 This is $\N\times \N$.
 Now, draw all of the lines with slope $1$, the ones whose equation is $y = x + c$
