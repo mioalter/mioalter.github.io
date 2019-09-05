@@ -312,7 +312,7 @@ let’s form $M\times M$ and consider the function $f: M \times M \to \Z$
 defined by $f(a,b) = count(a) - count(b)$.
 This is a homomorphism and it descends to a well-defined homomorphism
 $\ol f: \ol{M\times M} \to \Z$ defined by $\ol f([(a,b)]) = f(a,b)$.
-Tthis is well-defined because $f(a+m, b+m) = f(a,b)$.
+This is well-defined because $f(a+m, b+m) = f(a,b)$.
 So, if we can find a commutative monoid $M$ with a homomorphism to the
 natural numbers, maybe we can use its Grothendieck group to count integer numbers
 of things.
