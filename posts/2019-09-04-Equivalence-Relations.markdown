@@ -6,6 +6,7 @@ title: Equivalence Relations and the Best Group Ever
 \newcommand{\N}{\mathbb N}
 \newcommand{\ol}{\overline}
 
+
 Equivalence relations are ubiquitous in math and programming:
 they are behind a lot of familiar things.
 We’ll see some examples followed by a nice application—how to turn a commutative
