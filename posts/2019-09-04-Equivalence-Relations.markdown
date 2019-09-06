@@ -6,13 +6,16 @@ title: Equivalence Relations and the Best Group Ever
 \newcommand{\N}{\mathbb N}
 \newcommand{\ol}{\overline}
 
+Equivalence relations are very useful and total ubiquitous in math and programming,
+yet less widely known to programmers than other ideas from algebra like monoids
+and groups.
+We'll do a few examples here to see how some familiar things
+are defined in terms of equivalence relations,
+continue with an application—how to turn any commutative monoid into a group—and
+end with some examples of that construction.
 
-Equivalence relations are ubiquitous in math and programming:
-we’ll see some familiar examples followed by a nice application—how to turn a
-commutative monoid into a group—and some examples of that, too.
-
-We'll start quite gently then pick up momentum;
-hopefully this is useful and interesting for programmers with a wide range
+We'll start quite gently then pick up momentum.
+Hopefully this is useful and interesting to programmers with a wide range
 of mathematical experience.
 
 ### Modular Arithmetic ###
@@ -258,8 +261,8 @@ and will wind up with multiple ways to represent the same thing.
 
 Nonetheless, what we just did is a special case of a totally general construction:
 given any commutative monoid $(M, +, 0)$, we can define the analogous
-equivalence relation on $M \times M$ and define a group structure on the set
-$\ol{M \times M}$ of equivalence classes.
+equivalence relation on $M \times M$—$(a,b) \sim (a + m, b + m)$ for all $m\in M$—and
+define a group structure on the set $\ol{M \times M}$ of equivalence classes.
 The inclusion map $\iota: M \to \ol{M \times M}$, $\iota(m) = [(m,0)]$
 is a monoid homomorphism.
 
@@ -295,17 +298,23 @@ its Grothendieck group is isomorphic to the [free Abelian (commutative) group][F
 on `A`.
 Working out this isomorphism is analogous to showing that the Grothendieck group
 of the natural numbers is isomoprhic to the integers,
-you can just write it down, but there are also free things and universal properties
-involved, so you can use those, too.
+you can just write it down and show it or, since there are also free things and
+universal properties floating around, so you can use those, too.
 
-Next, here’s a construction that doesn’t work for the example I originally thought
-of, but might be useful.
-Say that $M$ is some complex datastructure for counting things so comes
+The Grothendieck group of `MultiSet[A]` is called _bags with signed multiplicities_
+in the [Incremental λ-Calculus][IncLC] and used there as a _change structure_
+to define the derivative of a program.
+
+Riffing on the change structure idea, I imagined doing the following construction
+on some fancy datastructure $M$ that comes equipped with a homomophism to the
+natural numbers. The one I thought of was HyperLogLog, but that definitely doesn't
+work as we'll see after.
+
+Say that $M$ is some fancy datastructure for counting things so comes
 equipped with a homomorphism  $count: M \to \mathbb N$.
-Think: HyperLogLog, but then don’t because HyperLogLog’s count is not a homomorphism.
-Let’s finish the construction, then come back to this.
-Continuing: we want to use $M$ to count both increments and decrements of things
-so we’ll try to turn $M$ into something bigger with a homomorphism to the integers.
+Now suppose that we want to use $M$ to keep track of both additions and
+subtractions of things so want to turn it into something even fancier with
+a homomorphism to the integers.
 
 As a first step toward constructing the Grothendieck group of $M$,
 let’s form $M\times M$ and consider the function $f: M \times M \to \Z$
@@ -314,8 +323,9 @@ This is a homomorphism and it descends to a well-defined homomorphism
 $\ol f: \ol{M\times M} \to \Z$ defined by $\ol f([(a,b)]) = f(a,b)$.
 This is well-defined because $f(a+m, b+m) = f(a,b)$.
 So, if we can find a commutative monoid $M$ with a homomorphism to the
-natural numbers, maybe we can use its Grothendieck group to count integer numbers
-of things.
+natural numbers,
+maybe we can use its Grothendieck group to keep track of additions and subtraactions
+and count the number of those using our homomorphism to the integers.
 Let me know if you find a suitable $M$.
 
 Back to [HyperLogLog][HLL]: an HLL is a probablistic datastructure for counting
@@ -333,19 +343,20 @@ We can still totally form the Grothendieck group of HLLs,
 but I’m not sure what we’d want to do with it other than map it to the
 Grothendieck group of the natural numbers which we just said won’t do what we want.
 
-On the non-programming front, and to end with an example that does work:
-it is pretty common in math to have a commutative monoid that you want to turn
-into a group.
-[Topological K-theory][KT], a basic tool in algebraic topology, is one example.
+Finally, it is pretty common in math to have a commutative monoid that you
+want to turn into a group:
+[Topological K-theory][KT], a basic tool in algebraic topology,
+is one example.
 
 
 ### Conclusion ###
 
 That’s it! Equivalence relations, modular arithemtic,
 constructing the integers from the natural numbers,
-the Grothendieck group in general, and some good and less-good things you can
-do with it.
+the Grothendieck group, and some examples of it.
+I hope this is as fun to read as it was to write.
 
+[IncLC]: https://inc-lc.github.io
 [FAG]: https://en.wikipedia.org/wiki/Free_abelian_group
 [FM]: https://en.wikipedia.org/wiki/Free_monoid
 [KT]: https://en.wikipedia.org/wiki/Topological_K-theory
