@@ -171,7 +171,7 @@ but we’ll see examples where we can do it.
 ### Modular arithmetic, again ###
 
 Arithmetic mod 7 one more time: $S$ is the integers,
-$\ol S is the set of equivalence classes $[0], [1], \ldots, [6]$,
+$\ol S$ is the set of equivalence classes $[0], [1], \ldots, [6]$,
 the set of subsets of integers whose differences are multiples of 7,
 and we can define addition on $\ol S$, exactly as we did,
 by $[a] + [b] = [a + b]$.
@@ -183,7 +183,7 @@ are equivalent to $a$ and $b$, the fact that they are equivalent to $a$ and $b$
 means we can write each as $a + 7m$ and $b + 7n$ for some integers $m$ and $n$.
 Then we compute $[a' + b'] = [a + 7m + b + 7n] = [a + b + 7(n + m)] = [a + b]$,
 that is, $a + b + 7(n + m) \sim a + b$ since their difference is a multiple of 7.
-Thus, our definition $[a] + [b]$ is independent of which elements of
+Thus, our definition of $[a] + [b]$ is independent of which elements of
 [a] and [b] we use to compute it so is well-defined.
 
 More generally, we don’t just have addition:
@@ -210,12 +210,11 @@ $\N = 0, 1, 2, \ldots$
 Can we construct the integers from these?
 Intuitively: yeah by, like, taking pairs of natural numbers where the first
 component is the positive part and the second component is the negative part.
-This actually works! Like so: take the set of ordered pairs
-$S = \N\times \N$.
+This actually works! Like so: take the set of ordered pairs $\N\times \N$.
 Now $\N$ is a monoid under addition and we can define a monoid structure on
-$\N \times N$ by doing addition component-wise:
+$\N \times \N$ by doing addition component-wise:
 $(a, b) + (c, d) := (a + c, b + d)$.
-Define an equivalence relation on $\N\times N$ by $(a,b) \sim (a + n, b + n)$
+Define an equivalence relation on $\N\times \N$ by $(a,b) \sim (a + n, b + n)$
 for any $n \in \N$.
 
 Visually: take the $xy$-plane and consider the points with integer
