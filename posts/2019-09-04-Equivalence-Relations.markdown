@@ -240,7 +240,7 @@ That’s how we get the integers.
 
 The is a special case of a general construction as we are about to see.
 
-So: if you are, say, futzing around with the Lambda Calculus and you’ve got
+So: if you are, say, futzing around with the λ-Calculus and you’ve got
 [Church numerals][CHURCH] (natural numbers) and are looking around for a way to
 define the integers, this will do it.
 
@@ -298,21 +298,22 @@ on `A`.
 Working out this isomorphism is analogous to showing that the Grothendieck group
 of the natural numbers is isomoprhic to the integers,
 you can just write it down and show it or, since there are also free things and
-universal properties floating around, so you can use those, too.
+universal properties floating around, you can use those, too.
 
 The Grothendieck group of `MultiSet[A]` is called _bags with signed multiplicities_
 in the [Incremental λ-Calculus][IncLC] and used there as a _change structure_
 to define the derivative of a program.
+As the name suggests, it consists of unordered bags of elements with integer
+multiplicities.
 
-Riffing on the change structure idea, I imagined doing the following construction
-on some fancy datastructure $M$ that comes equipped with a homomophism to the
-natural numbers. The one I thought of was HyperLogLog, but that definitely doesn't
-work as we'll see after.
+Since we can count the _total_ number of elements in a multiset, we can count
+the total number of changes, i.e. the total number of things in an element
+of its Grothendieck group. Here's the general construction.
 
-Say that $M$ is some fancy datastructure for counting things so comes
+Suppose that $M$ is a datastructure that comes
 equipped with a homomorphism  $count: M \to \mathbb N$.
 Now suppose that we want to use $M$ to keep track of both additions and
-subtractions of things so want to turn it into something even fancier with
+deletions/subtractions of things so want to turn it into something fancier that has
 a homomorphism to the integers.
 
 As a first step toward constructing the Grothendieck group of $M$,
@@ -321,30 +322,34 @@ defined by $f(a,b) = count(a) - count(b)$.
 This is a homomorphism and it descends to a well-defined homomorphism
 $\ol f: \ol{M\times M} \to \Z$ defined by $\ol f([(a,b)]) = f(a,b)$.
 This is well-defined because $f(a+m, b+m) = f(a,b)$.
-So, if we can find a commutative monoid $M$ with a homomorphism to the
-natural numbers,
-maybe we can use its Grothendieck group to keep track of additions and subtraactions
-and count the number of those using our homomorphism to the integers.
-Let me know if you find a suitable $M$.
 
-Back to [HyperLogLog][HLL]: an HLL is a probablistic datastructure for counting
-the approximate number distinct elements in a multiset.
-HLLs form a commutative monoid in exactly the way you would want:
+So, if we can find a commutative monoid $M$ with a homomorphism to the
+natural numbers, we can use its Grothendieck group to keep track of both
+additions and subtractions of things and count the number of those using
+our induced homomorphism to the integers.
+
+We can do this with `MultiSet[A]` to count the total number of changes, but
+we can't do it to count the number of _distinct_ changes:
+the problem is that the number of distinct elements in
+a union of multisets is definitely not the sum of the numbers of distinct
+elements in each.
+
+[HyperLogLog][HLL] is a cool datastructure for counting the _approximate_ number of
+distinct elements in a multiset which _does_ form a commutative monoid in
+exactly the way you would want:
 so that the function that sends a multiset to an HLL into which the elements of
 that multiset have been inserted is a homomorphism.
-An HLL also has a function $count: HLL \to \N$ which tells us its approximation
-of the number of distinct elements it has seen, but this is clearly not a
-homomorhpism since the number of distinct elements in a union of two multisets
-is definitely not, even approximately, the sum of the numbers of distinct elements
-in each.
-Sad trombone.
-We can still totally form the Grothendieck group of HLLs,
-but I’m not sure what we’d want to do with it other than map it to the
-Grothendieck group of the natural numbers which we just said won’t do what we want.
+So we could form its Grothendieck group, but our counting construction
+would fail again for the same reason:
+that $approxCount: HLL \to \N$ is not a homomorphism.
+We can only ask the approximate count of distinct elements
+_after_ we've added all our HLLs. Sad trombone.
+This might not be the most useful Grothendieck group as a result,
+but there you have it.
 
-Finally, it is pretty common in math to have a commutative monoid that you
-want to turn into a group:
-[Topological K-theory][KT], a basic tool in algebraic topology,
+Finally, in math, it is pretty common to have a commutative monoid
+that you want to turn into a group:
+[topological K-theory][KT], a basic tool in algebraic topology,
 is one example.
 
 
