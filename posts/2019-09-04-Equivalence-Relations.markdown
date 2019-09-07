@@ -358,7 +358,7 @@ is one example.
 That’s it! Equivalence relations, modular arithemtic,
 constructing the integers from the natural numbers,
 the Grothendieck group, and some examples of it.
-I hope this is as fun to read as it was to write.
+I hope you enjoyed.
 
 [IncLC]: https://inc-lc.github.io
 [FAG]: https://en.wikipedia.org/wiki/Free_abelian_group
