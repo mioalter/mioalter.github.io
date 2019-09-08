@@ -1,5 +1,5 @@
 ---
-title: Equivalence Relations and the Best Group Ever
+title: Equivalence Relations With Applications
 ---
 \newcommand{\bb}{\mathbb}
 \newcommand{\Z}{\mathbb Z}
