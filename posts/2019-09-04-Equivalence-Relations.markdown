@@ -1,5 +1,5 @@
 ---
-title: Equivalence Relations With Applications
+title: Equivalence Relations with Applications
 ---
 \newcommand{\bb}{\mathbb}
 \newcommand{\Z}{\mathbb Z}
