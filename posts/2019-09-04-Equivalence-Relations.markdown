@@ -352,6 +352,12 @@ that you want to turn into a group:
 [topological K-theory][KT], a basic tool in algebraic topology,
 is one example.
 
+Exercise: There is nothing special about the natural numbers in our counting
+construction: for any homomorphism $f: M \to N$ of commutative monoids,
+define the induced homomorphism $\ol f$ of Grothendieck groups.
+What if we have two: $f: M\to N$ and $g: N \to O$?
+How are $\ol{g\circ f}$ and $\ol g \circ \ol f$ related?
+What does this say in category theory terms abut the Grothendieck group?
 
 ### Conclusion ###
 
