@@ -164,7 +164,7 @@ Forming the set of equivalence classes is called “modding out” or “quotien
 the equivalence relation.
 
 Finally, if we have some extra algebraic structure on $S$, we can try to transport
-it to $\ol S$.
+it to $\ol{S}$.
 Having an equivalence relation doesn’t let us do this automatically,
 but we’ll see examples where we can do it.
 
