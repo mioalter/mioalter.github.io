@@ -161,7 +161,9 @@ in at least one equivalence class, the equivalence class $[a]$, and so on.
 This is clearly the case with our circle.
 
 Forming the set of equivalence classes is called “modding out” or “quotienting by”
-the equivalence relation.
+the equivalence relation. We often write the set of equivalence classes as
+$S / \sim$ or $\tilde S$ or $\bar S$. We'll stick with the first for annoying
+LaTex-rendering reasons.
 
 Finally, if we have some extra algebraic structure on $S$, we can try to transport
 it to $\ol{S}$.
