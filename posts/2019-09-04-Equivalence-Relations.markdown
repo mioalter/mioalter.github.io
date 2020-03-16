@@ -4,7 +4,6 @@ title: Equivalence Relations with Applications
 \newcommand{\bb}{\mathbb}
 \newcommand{\Z}{\mathbb Z}
 \newcommand{\N}{\mathbb N}
-\newcommand{\ol}{\overline}
 
 Equivalence relations are very useful and total ubiquitous in math and programming,
 yet less widely known to programmers than other ideas from algebra like monoids
@@ -166,16 +165,16 @@ $S / \sim$ or $\tilde S$ or $\bar S$. We'll stick with the first for annoying
 LaTex-rendering reasons.
 
 Finally, if we have some extra algebraic structure on $S$, we can try to transport
-it to $\ol{S}$.
+it to $S/\sim$.
 Having an equivalence relation doesn’t let us do this automatically,
 but we’ll see examples where we can do it.
 
 ### Modular arithmetic, again ###
 
 Arithmetic mod 7 one more time: $S$ is the integers,
-$\ol S$ is the set of equivalence classes $[0], [1], \ldots, [6]$,
+$S / \sim$ is the set of equivalence classes $[0], [1], \ldots, [6]$,
 the set of subsets of integers whose differences are multiples of 7,
-and we can define addition on $\ol S$, exactly as we did,
+and we can define addition on $S/\sim$, exactly as we did,
 by $[a] + [b] = [a + b]$.
 The work left to do is to show that this is well-defined,
 that we get the same answer no matter which element-whose-shadow-is-$a$ and
@@ -192,7 +191,7 @@ More generally, we don’t just have addition:
 the integers are a group—a ring, even!—and we can define a whole group structure
 on the set of equivalence classes:
 we also have an identity, $[0]$, and additive inverses, $-[a]$ is $[-a]$.
-With this group structure, the projection map $\pi: S \to \ol S$
+With this group structure, the projection map $\pi: S \to S/\sim$
 which sends an integer to its equivalence class is a group homomorphism.
 This is basically by construction: $\pi(a + b) = \pi(a) + \pi(b)$ since $\pi(a + b) = [a + b]$, $\pi(a) + \pi(b) = [a] + [b]$,
 and we defined the latter to be the former.
@@ -233,8 +232,8 @@ Dropping the brackets and parentheses and writing $a$ for the first,
 $0$ for the second and $-b$ for the third,
 we get the integers!
 
-Less hand wavily: we can define a group structure on the set $\ol{\N \times \N}$
-of equivalence classes, define a function $f: \ol{\N \times \N} \to \Z$
+Less hand wavily: we can define a group structure on the set $(\N \times \N)/\sim$
+of equivalence classes, define a function $f: (\N \times \N)/\sim \to \Z$
 by $f[(a,b)] = a - b$,
 show that $f$ is well-defined, show that $f$ is a group homomorphism,
 then show that it is, in fact, an isomorphism.
@@ -263,15 +262,15 @@ and will wind up with multiple ways to represent the same thing.
 Nonetheless, what we just did is a special case of a totally general construction:
 given any commutative monoid $(M, +, 0)$, we can define the analogous
 equivalence relation on $M \times M$—$(a,b) \sim (a + m, b + m)$ for all $m\in M$—and
-define a group structure on the set $\ol{M \times M}$ of equivalence classes.
-The inclusion map $\iota: M \to \ol{M \times M}$, $\iota(m) = [(m,0)]$
+define a group structure on the set $(M \times M)/\sim$ of equivalence classes.
+The inclusion map $\iota: M \to (M \times M)/\sim$, $\iota(m) = [(m,0)]$
 is a monoid homomorphism.
 
 This is “the best group we can make from $M$” in the following sense:
 suppose we have another monoid $N$ and a monoid homomorphism $M \to N$,
 if $N$ happens to actually be a group, we get, for free, a unique group homomorphism
-$\ol{M \times M} \to N$.
-Another way to say this is that $\ol {M \times M}$ satisfies a universal property.
+$(M \times M)/\sim \to N$.
+Another way to say this is that $(M \times M)$ satisfies a universal property.
 This group is called the [_Grothendieck group_][GG] of the commutative monoid $M$.
 
 
@@ -322,7 +321,7 @@ As a first step toward constructing the Grothendieck group of $M$,
 let’s form $M\times M$ and consider the function $f: M \times M \to \Z$
 defined by $f(a,b) = count(a) - count(b)$.
 This is a homomorphism and it descends to a well-defined homomorphism
-$\ol f: \ol{M\times M} \to \Z$ defined by $\ol f([(a,b)]) = f(a,b)$.
+$\tilde{f}: (M\times M)/\sim \to \Z$ defined by $\tilde f([(a,b)]) = f(a,b)$.
 This is well-defined because $f(a+m, b+m) = f(a,b)$.
 
 So, if we can find a commutative monoid $M$ with a homomorphism to the
@@ -356,9 +355,10 @@ is one example.
 
 Exercise: There is nothing special about the natural numbers in our counting
 construction: for any homomorphism $f: M \to N$ of commutative monoids,
-define the induced homomorphism $\ol f$ of Grothendieck groups.
+define the induced homomorphism $\tilde f$ of Grothendieck groups.
 What if we have two: $f: M\to N$ and $g: N \to O$?
-How are $\ol{g\circ f}$ and $\ol g \circ \ol f$ related?
+How are the homomorphism induced by $g\circ f$
+and $\tilde g \circ \tilde f$ related?
 What does this say in category theory terms abut the Grothendieck group?
 
 ### Conclusion ###
