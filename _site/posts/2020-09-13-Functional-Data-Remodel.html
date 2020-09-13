@@ -61,7 +61,7 @@ message EntityKey {
 <p>There are two kinds of things we can build with these:</p>
 <ul>
 <li>we can build compound entities by making sets/lists of distinct primitive entities</li>
-<li>we can build primitive entity identifiers by forming <code>(primitive entity, identifer)</code> pairs</li>
+<li>we can build primitive entity identifiers by forming (primitive entity, identifer) pairs</li>
 </ul>
 <p>In types/aspirational pseudo-Scala:</p>
 <ul>
@@ -89,7 +89,7 @@ message PrimitiveEntityIdentifier { // fka EntityKey
 }</code></pre>
 <p>If we want an Entity to have a name, we can define a function <code>Entity =&gt; String</code> which is basically <code>Entity.primitiveEntityNames.mkString(&quot;_&quot;)</code>.</p>
 <h1 id="conclusion">Conclusion</h1>
-<p>This doesn’t look like much of a change, but it is actually pretty significant. We exploded the hierarchy of things each of which <em>has a</em> list of the next things on it. It is now clear what the basic things are, which things are built from other things and how, and we have much more flexibility in how we program with these new types.</p>
+<p>This doesn’t look like much of a change, but it is actually pretty significant. We exploded the hierarchy of things each of which <em>has a</em> list of the next things on it into a few basic things and ways to combine them. One thing <em>is a</em> list of basic things. Another thing <em>has a</em> list because we can form tuples of basic things and define simple functions between them.</p>
     </section>
 </article>
 

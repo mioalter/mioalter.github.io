@@ -84,7 +84,7 @@ Our observation was: there are two kinds of building blocks
 There are two kinds of things we can build with these:
 
 * we can build compound entities by making sets/lists of distinct primitive entities
-* we can build primitive entity identifiers by forming `(primitive entity, identifer)` pairs
+* we can build primitive entity identifiers by forming (primitive entity, identifer) pairs
 
 In types/aspirational pseudo-Scala:
 
@@ -138,7 +138,8 @@ which is basically `Entity.primitiveEntityNames.mkString("_")`.
 
 This doesn't look like much of a change, but it is actually pretty significant.
 We exploded the hierarchy of things each of which _has a_ list of the next
-things on it.
-It is now clear what the basic things are,
-which things are built from other things and how,
-and we have much more flexibility in how we program with these new types.
+things on it into a few basic things and ways to combine them.
+One thing _is a_ list of basic things.
+Another thing _has a_ list because we can form tuples of basic things
+and define simple functions between them.
+
