@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Altered States</title>
+        <link rel="stylesheet" href="../css/default.css" />
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <a href="../">ALTERED STATES</a>
+            </div>
+            <nav>
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+            </nav>
+        </header>
+
+        <main role="main">
+            <h1>The Algebra of Two's Complement</h1>
+            <article>
+    <section class="header">
+        Posted on January  2, 2021
+        
+    </section>
+    <section>
+        
+<p>Suppose we want to work with positive and negative integers, but only have room to store <span class="math inline">2<sup><em>N</em></sup></span> distinct numbers where <span class="math inline"><em>N</em></span> is a positive even integer, think 32 or 64? Suppose further that we want to do this on a computer? Let’s first figure out how to do this at all, then figure out how to do it on a computer.</p>
+<h1 id="a-cyclic-group">A cyclic group</h1>
+<p>We want to work with integers—the whole numbers on the number line, positive, negative, and zero—meaning we want to have numbers and be able to add and multiply them, but we can only have <span class="math inline">2<sup><em>N</em></sup></span> distinct numbers.</p>
+<p>We can take “the integers mod <span class="math inline">2<sup><em>N</em></sup></span>”, but let’s be precise about what that is. We take all of the integers, ask each one its remainder when we divide it by <span class="math inline">2<sup><em>N</em></sup></span>, group together the integers with the same remainder onto a team, and define addition and multiplication on the set of resulting teams. This is the “how do you make teams in gym class” description.</p>
+<p>More formally: we define an equivalence relation by saying that two integers are equivalent if their difference is a multiple of <span class="math inline">2<sup><em>N</em></sup></span> (this is equivalent to “have the same remainder when divided by <span class="math inline">2<sup><em>N</em></sup></span>”) and take the set of <em>equivalence classes</em>. Let’s write <span class="math inline">[2]</span> for “the equivalence class of <span class="math inline">2</span>”, meaning, the set of all integers equivalent to <span class="math inline">2</span>, namely <span class="math inline">{…,  − 2<sup><em>N</em></sup> + 2, 2, 2<sup><em>N</em></sup> + 2, …}</span>. This means, of course, that <span class="math inline">[2]</span> is the same as <span class="math inline">[2<sup><em>N</em></sup> + 2]</span>, is the same as $[-2^N + 2], etc. so there are infinitely many ways to represent each of these. We call <span class="math inline">2</span> the <em>representative</em> of its equivalence class, each class has infinitely many representatives.</p>
+<p>One way to think of this is: we mark off all the multiples of <span class="math inline">2<sup><em>N</em></sup></span> on the number line, then roll up the whole number line so these points all align to get a circle of circumference <span class="math inline">2<sup><em>N</em></sup></span>. We will only care about the integer points on the number line / circle, but there is no harm in picturing the points in between. So we have a circle. We can define addition, multiplication, and negatives on here, but we need to figure out how. Our intuition about how these work on the usual flat number line may fail us so we’ll need to build up new intution.</p>
+<p>Remember that our numbers on the circle are our gym class teams, our equivalence classes, the sets <span class="math inline">[0]</span>, <span class="math inline">[1]</span>, …, <span class="math inline">[2<sup><em>N</em></sup> − 1]</span>.</p>
+<p>First, addition: let’s define <span class="math inline">[<em>a</em>] + [<em>b</em>]</span> to be <span class="math inline">[<em>a</em> + <em>b</em>]</span>. So, for example, <span class="math inline">[1] + [2] = [1 + 2] = [3]</span>. Does this make sense? We have to check that we get the same answer no matter which representative we choose. Try it, it works.</p>
+<p>Next, multiplication: let’s define <span class="math inline">[<em>a</em>] * [<em>b</em>]</span> to be <span class="math inline">[<em>a</em> * <em>b</em>]</span>. So, for example, <span class="math inline">[2] * [3] = [2 * 3] = [6]</span>. Same story, this has to be independent of which representatives we choose. It is.</p>
+<p>There is plenty more: we have a zero for addition, <span class="math inline">[0]</span>, we have a one for multiplication, <span class="math inline">[1]</span>, we have inverses for addition, multiplication distributes over addition, and then there are a few weird things. Let’s make a list</p>
+<ul>
+<li>we have addition: <span class="math inline">[<em>a</em>] + [<em>b</em>] = [<em>a</em> + <em>b</em>]</span></li>
+<li>addition is commutative</li>
+<li>we have a zero (additive identity): <span class="math inline">[0] + [<em>a</em>] = [<em>a</em>]</span></li>
+<li>we have additive inverses: <span class="math inline">[<em>a</em>] + [2<sup><em>N</em></sup> − <em>a</em>] = [<em>a</em> + 2<sup><em>N</em></sup> − <em>a</em>] = [2<sup><em>N</em></sup>] = [0]</span></li>
+<li>we have multiplication: <span class="math inline">[<em>a</em>] * [<em>b</em>] = [<em>a</em> * <em>b</em>]</span></li>
+<li>we have a one (multiplicative identity): <span class="math inline">[1] * [<em>a</em>] = [1 * <em>a</em>] = [<em>a</em>]</span></li>
+<li>mulplication distributes over addition: <span class="math inline">[<em>a</em>] * ([<em>b</em>] + [<em>c</em>]) = [<em>a</em>] * [<em>b</em> + <em>c</em>] = [<em>a</em> * (<em>b</em> + <em>c</em>)] = [<em>a</em> * <em>b</em> + <em>a</em> * <em>c</em>] = [<em>a</em> * <em>b</em>] + [<em>a</em> * <em>c</em>]</span></li>
+</ul>
+<p>and some weirdness</p>
+<ul>
+<li><p>we can add together nonzero positive-looking numbers and get zero: e.g. <span class="math inline">[3] + [2<sup><em>N</em></sup> − 3] = [0]</span></p></li>
+<li><p>we can multiply together nonzero numbers and get zero: e.g. <span class="math inline">[2] * [2<sup><em>N</em> − 1</sup>] = [2 * 2<sup><em>N</em> − 1</sup>] = [2<sup><em>N</em></sup>] = [0]</span></p></li>
+</ul>
+<p>These just come with the territory: we are on a circle, addition and multiplication move us around the circle and sometimes we end up back at the point on the circle called <span class="math inline">[0]</span>.</p>
+<p>The number system we just defined is usually written <span class="math inline">ℤ/2<sup><em>N</em></sup>ℤ</span> and called “Z mod 2 to the N” or “Z mod 2 to the N Z”. It has both addition and multiplication so it is a ring.</p>
+<p>So that’s how to work with integers when we can only have <span class="math inline">2<sup><em>N</em></sup></span> distinct numbers. Next, we’ll figure out how to represent these using bits.</p>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </footer>
+    </body>
+</html>
