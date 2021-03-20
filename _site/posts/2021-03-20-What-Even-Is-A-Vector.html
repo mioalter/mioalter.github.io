@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Altered States</title>
+        <link rel="stylesheet" href="../css/default.css" />
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <a href="../">ALTERED STATES</a>
+            </div>
+            <nav>
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+            </nav>
+        </header>
+
+        <main role="main">
+            <h1>What Even Is a Vector?</h1>
+            <article>
+    <section class="header">
+        Posted on March 20, 2021
+        
+    </section>
+    <section>
+        
+<p>This is a short post inspired by the AMS’s “What is a…?” series to introduce the basic ideas from linear algebra: vector spaces and maps between them. My imagined audience has some, potentially hazy, recollection of vectors from physics and/or calculus class, but may not have even taken a course in linear algebra. This includes software engineering colleagues as well as friends and family who work in the arts, humanities, or any other area and might have an intellectual interest. My goal is to make these ideas exciting and comfortable.</p>
+<h1 id="sets">Sets</h1>
+<p>A set is just a bunch of things, e.g.</p>
+<ul>
+<li><span class="math inline">{<em>a</em>, <em>b</em>, <em>c</em>}</span> is a set,</li>
+<li>the integers <span class="math inline">ℤ = {…,  − 2,  − 1, 0, 1, 2, …}</span> are a set,</li>
+<li>the real number line <span class="math inline">ℝ</span> is a set,</li>
+<li>the 2 dimensional xy-plane consisting of all ordered pairs of numbers on the number line is a set,</li>
+<li>4d xyz-space consisting of all ordered triples of numbers on the real number line is a set.</li>
+</ul>
+<p>We denote sets using curly braces. The elements may or may not have an ordering and there can be finitely or infinitely many of them. There are no presumed operations (e.g. addition, multiplication) on a set.</p>
+<p>A function between sets <span class="math inline"><em>f</em> : <em>X</em> → <em>Y</em></span> is rule that, for every element of <span class="math inline"><em>X</em></span>, assigns an element of <span class="math inline"><em>Y</em></span>. Functions can be</p>
+<ul>
+<li>injective or 1-1 (“one to one”)</li>
+<li>surjective or onto</li>
+<li>bijective</li>
+</ul>
+<p>In words:</p>
+<ul>
+<li><span class="math inline"><em>f</em></span> is injective if it never sends different things to the same place. Equivalently: if it sends two things to the same place, those things were the same.</li>
+<li><span class="math inline"><em>f</em></span> is surjective if everying in <span class="math inline"><em>Y</em></span> is <span class="math inline"><em>f</em></span> of something.</li>
+<li><span class="math inline"><em>f</em></span> is bijective if it is both injective and surjective.</li>
+</ul>
+<p>We can make new sets out of old sets by taking</p>
+<ul>
+<li>unions: e.g. <span class="math inline">{<em>a</em>, <em>b</em>} ∪ {<em>c</em>, <em>d</em>} = {<em>a</em>, <em>b</em>, <em>c</em>, <em>d</em>}</span></li>
+<li>products: e.g. <span class="math inline">{<em>a</em>, <em>b</em>} × {<em>c</em>, <em>d</em>} = {(<em>a</em>, <em>c</em>), (<em>a</em>, <em>d</em>), (<em>b</em>, <em>d</em>), (<em>b</em>, <em>d</em>)}</span></li>
+</ul>
+<p>That is, a product of two sets is the set consisting of all ordered pairs of elements in the original two sets. So the xy-plane is <span class="math inline">ℝ × ℝ</span> which we abbreviate to <span class="math inline">ℝ<sup>2</sup></span>, and xyz-space is <span class="math inline">ℝ × ℝ × ℝ</span> which we abbreviate to <span class="math inline">ℝ<sup>3</sup></span>. More generally, <span class="math inline">ℝ<sup><em>n</em></sup></span> is the set of n-tuples of real numbers.</p>
+<h1 id="vector-spaces">Vector Spaces</h1>
+<p>We’ll launch right in to vector spaces in general first, then circle back to connect what we get to the things we learned in high school.</p>
+<p>A vector space is</p>
+<ul>
+<li>a set</li>
+<li>whose elements we can add</li>
+<li>and multiply by numbers</li>
+<li>where addition and multiplication interact in expected ways</li>
+</ul>
+<p>This is obviously very vague, but the point is that a vector space is a set, with some operations, that satisfy some conditions. There is nothing intrinsic about the elements that makes them vectors, they are vectors becasue they are elements of a set with operations that satisfy the conditions that make it a vector space. One upshot of this is that a set may be a vector space and it may also be something else, too. The elements are vectors when you are considering the set as a vector space, but they are not vectors in and of themselves, all the time, no matter what, so you are free to stop thinking about them as vectors whenever you want.</p>
+<p>Let’s say in words what this all means in a little more detail, but still not that much</p>
+<ul>
+<li>we have a set whose elements we call vectors</li>
+<li>we can add vectors
+<ul>
+<li>we have an addition operation that takes two vectors and produces another vector</li>
+<li>there is a zero vector, that is, a single vector that, when we add it to any other vector, we get back that other vector</li>
+<li>every vector has a negative vector, that is, for every vector, there is another vector that, when we add the two together, we get the zero vector</li>
+<li>addition is associative</li>
+<li>addition is commutative</li>
+</ul></li>
+<li>we can multiply vectors by numbers
+<ul>
+<li>what numbers?? We have to choose! We will choose the real numbers <span class="math inline">ℝ</span>, but all we need is a number system that is a <a href="https://en.wikipedia.org/wiki/Field_(mathematics)">field</a>.</li>
+<li>we have a multiplication operation that takes a number and a vector and produces another vector</li>
+<li>zero (the number) times any vector is the zero vector</li>
+<li>negative one (the number) times any vector is the negative of that vector</li>
+<li>mulitplying a vector by a number, then multiplying it by another number is equal to multiplying the original vector by the product of those numbers</li>
+<li>multiplication distributes over addition</li>
+</ul></li>
+</ul>
+<p>We won’t go into every detail, but you get the idea: we need rules for how addition and multiplication each works and how they work together. Everything is intuitive, but we’re mathematicians here and have to spell it all out.</p>
+<h1 id="linear-maps">Linear Maps</h1>
+<h1 id="appendix">Appendix</h1>
+<h2 id="sets-1">Sets</h2>
+<h3 id="notation">Notation</h3>
+<ul>
+<li>The symbol <span class="math inline">∈</span> means “is in” or “is an element of”.</li>
+<li>We can also describe sets using the notation <span class="math inline">{ elements | conditions }</span> where “<span class="math inline">|</span>” means “such that” so we list the elements then the conditions that they satisfy. For example,
+<ul>
+<li><span class="math inline">{<em>a</em> ∈ ℤ|<em>a</em> is even}</span> is one notation for the even integers,</li>
+<li><span class="math inline">{(<em>a</em>, <em>b</em>)|<em>a</em> ∈ ℝ, <em>b</em> ∈ ℝ, <em>b</em> &gt; 1}</span> is one notation for the subset of the xy-plane consisting of pairs whose second coordinate is positive.</li>
+<li><span class="math inline">{(<em>a</em>, <em>b</em>) ∈ ℝ × ℝ|<em>b</em> &gt; 0}</span> is another way to write the same set.</li>
+</ul></li>
+</ul>
+<h3 id="exercises">Exercises</h3>
+<ul>
+<li>Is <span class="math inline"><em>f</em> : ℝ → ℝ</span> defined by <span class="math inline"><em>f</em>(<em>x</em>) = <em>x</em><sup>2</sup></span> injective? surjective? bijective?</li>
+<li>Is <span class="math inline"><em>f</em> : ℝ → ℝ</span> defined by <span class="math inline"><em>f</em>(<em>x</em>) = <em>x</em> + 3</span> injective? surjective? bijective?</li>
+<li>Is the <span class="math inline"><em>f</em></span> from the xy-plane to xyz-space defined by <span class="math inline"><em>f</em>(<em>x</em>, <em>y</em>) = (<em>x</em>, <em>y</em>, 0)</span> injective? surjective? bijective?</li>
+<li>Express what it means for a function to be injective/surjective in symbols.</li>
+</ul>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </footer>
+    </body>
+</html>
