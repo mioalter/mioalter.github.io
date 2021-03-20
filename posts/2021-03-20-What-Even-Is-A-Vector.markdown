@@ -25,7 +25,7 @@ A set is just a bunch of things, e.g.
 * the real number line $\R$ is a set,
 * the 2 dimensional xy-plane
 consisting of all ordered pairs of numbers on the number line is a set,
-* 4d xyz-space consisting of all ordered triples
+* 3d xyz-space consisting of all ordered triples
 of numbers on the real number line is a set.
 
 We denote sets using curly braces.
