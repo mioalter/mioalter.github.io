@@ -69,7 +69,7 @@
 <p>Adding additive inverses to our picture</p>
 <p><img src="../images/circle-mod-8-negs.jpg" /></p>
 <p>we see that the negative of each element is its reflection over the x-axis. This means that the two numbers on the x-axis, <span class="math inline">[0]</span> and <span class="math inline">[4]</span> are their own additive inverses.</p>
-<h1 id="the-ring-u_n">The Ring <span class="math inline"><em>U</em><sub><em>N</em></sub></span></h1>
+<h1 id="the-ring-u_n">The ring <span class="math inline"><em>U</em><sub><em>N</em></sub></span></h1>
 <p>Now, let’s consider the set <span class="math inline"><em>U</em><sub><em>N</em></sub> = {0, 1, …, 2<sup><em>N</em></sup> − 1}</span>. We’ll make this into a ring in a way that is probably expected to some and unexpected to others.</p>
 <p>We have one obvious function “iota”</p>
 <p><span class="math inline"><em>ι</em> : <em>U</em><sub><em>N</em></sub> → ℤ</span></p>
@@ -114,9 +114,18 @@
 <p><span class="math inline"><em>f</em>([<em>a</em>]) + <em>f</em>([<em>b</em>]) = <em>τ</em>(<em>a</em>) + <em>τ</em>(<em>b</em>)</span></p>
 <p>and the equality of these two things is the statement that <span class="math inline"><em>τ</em></span> is a homorphism for addition which we already waved our hands at. Similarly for multiplication. So yes, <span class="math inline"><em>f</em></span> is a ring homomorphism.</p>
 <p>Finally: is <span class="math inline"><em>f</em></span> an isomorphsim? It has to be onto and 1-1. It is both. The “onto” is pretty straight forward: if <span class="math inline"><em>a</em></span> is in <span class="math inline"><em>U</em><sub><em>N</em></sub></span>, then <span class="math inline"><em>a</em> = <em>τ</em>(<em>ι</em>(<em>a</em>))</span> which is equal to <span class="math inline"><em>f</em>([<em>ι</em>(<em>a</em>)])</span> so <span class="math inline"><em>a</em></span> is <span class="math inline"><em>f</em></span> of something thus <span class="math inline"><em>f</em></span> is onto. For the 1-1: if <span class="math inline"><em>τ</em>(<em>a</em>) = <em>τ</em>(<em>b</em>)</span>, then <span class="math inline">[<em>τ</em>(<em>a</em>)] = [<em>τ</em>(<em>b</em>)]</span>, but <span class="math inline">[<em>τ</em>(<em>a</em>)] = [<em>a</em>]</span> and <span class="math inline">[<em>τ</em>(<em>b</em>)] = [<em>b</em>]</span> so <span class="math inline">[<em>a</em>] = [<em>b</em>]</span>. So yes, <span class="math inline"><em>f</em></span> is 1-1.</p>
-<p>Thus, <span class="math inline"><em>f</em></span> is an isomorphism of rings.</p>
-<h1 id="the-ring-b_n">The Ring B_N</h1>
-<p>Let’s consider the set of <span class="math inline"><em>N</em></span>-digit binary integers,</p>
+<p>Thus, <span class="math inline"><em>f</em></span> is an isomorphism of rings. So arithmetic in <span class="math inline"><em>U</em><sub><em>N</em></sub></span> <em>is</em> arithmetic in <span class="math inline">ℤ/2<sup><em>N</em></sup>ℤ</span>, we just replaced the equivalence classes <span class="math inline">[0], [1], …, [2<sup><em>N</em></sup> − 1]</span> with the numbers <span class="math inline">0, 1, …, 2<sup><em>N</em></sup> − 1</span>, their unique representatives between <span class="math inline">0</span> and <span class="math inline">2<sup><em>N</em></sup> − 1</span>.</p>
+<h1 id="the-ring-t_n">The ring <span class="math inline"><em>T</em><sub><em>N</em></sub></span></h1>
+<p>Now, let’s take another set, the set <span class="math inline"><em>T</em><sub><em>N</em></sub> = { − 2<sup><em>N</em> − 1</sup>,  − 2<sup><em>N</em> − 1</sup> + 1, …,  − 1, 0, 1, …, 2<sup><em>N</em> − 1</sup> − 1}</span> This set also has <span class="math inline">2<sup><em>N</em></sup></span> elements. Let’s not even waste time defining a new ring structure on here and instead just define a bijection with a ring we already have and transport the ring structure over via that bijection. Sounds like a mouthful, but it is pretty straight forward. Let’s define a function <span class="math inline"><em>g</em> : ℤ/2<sup><em>N</em></sup>ℤ → <em>T</em><sub><em>N</em></sub></span> by saying that <span class="math inline"><em>f</em>([<em>a</em>])</span> is the unique representative of <span class="math inline">[<em>a</em>]</span> between <span class="math inline"> − 2<sup><em>N</em> − 1</sup></span> and <span class="math inline">2<sup><em>N</em> − 1</sup> − 1</span>. This is clearly a bijection. Write <span class="math inline"><em>g</em><sup> − 1</sup></span> for its inverse function <span class="math inline"><em>g</em><sup> − 1</sup> : <em>T</em><sub><em>N</em></sub> → ℤ/2<sup><em>N</em></sup>ℤ</span>. Now we can transport the ring structure on <span class="math inline">ℤ/2<sup><em>N</em></sup>ℤ</span> to <span class="math inline"><em>T</em><sub><em>N</em></sub></span> via <span class="math inline"><em>g</em></span> by defining, for <span class="math inline"><em>a</em>, <em>b</em></span> in <span class="math inline"><em>T</em><sub><em>N</em></sub></span>,</p>
+<p><span class="math inline"><em>a</em> + <em>b</em> = <em>g</em>(<em>g</em><sup> − 1</sup>(<em>a</em>) + <em>g</em><sup> − 1</sup>(<em>b</em>))</span></p>
+<p>and similarly for multiplication. That is,</p>
+<p><span class="math inline"><em>a</em> + <em>b</em> = <em>g</em>([<em>a</em>] + [<em>b</em>]) = <em>g</em>([<em>a</em> + <em>b</em>])</span></p>
+<p>and</p>
+<p><span class="math inline"><em>a</em> * <em>b</em> = <em>g</em>([<em>a</em>] * [<em>b</em>]) = <em>g</em>([<em>a</em> * <em>b</em>])</span></p>
+<p>So, just as in <span class="math inline"><em>U</em><sub><em>N</em></sub></span>, arithmetic <em>is</em> arithmetic in <span class="math inline">ℤ/2<sup><em>N</em></sup>ℤ</span>, we just replaced the classes</p>
+<p><span class="math inline">[0], [1], …, [2<sup><em>N</em> − 1</sup> − 1], [2<sup><em>N</em> − 1</sup>], …, [2<sup><em>N</em></sup> − 1]</span></p>
+<p>with the numbers</p>
+<p><span class="math inline">0, 1, …, 2<sup><em>N</em> − 1</sup> − 1,  − 2<sup><em>N</em> − 1</sup>,  − 2<sup><em>N</em> − 1</sup> + 1, …,  − 1</span>.</p>
     </section>
 </article>
 

@@ -118,7 +118,7 @@ we see that the negative of each element is its reflection over the x-axis.
 This means that the two numbers on the x-axis, $[0]$ and $[4]$ are their
 own additive inverses.
 
-# The Ring $U_N$
+# The ring $U_N$
 
 Now, let's consider the set $U_N = \{0, 1, \ldots, 2^N - 1\}$.
 We'll make this into a ring in a way that is probably expected to some
@@ -251,11 +251,46 @@ but $[\tau(a)] = [a]$ and $[\tau(b)] = [b]$ so $[a] = [b]$.
 So yes, $f$ is 1-1.
 
 Thus, $f$ is an isomorphism of rings.
+So arithmetic in $U_N$ _is_ arithmetic in $\Z/2^N\Z$,
+we just replaced the equivalence classes
+$[0],[1],\ldots,[2^N - 1]$
+with the numbers $0,1,\ldots,2^N -1$, their unique representatives
+between $0$ and $2^N - 1$.
 
-# The Ring B_N
+# The ring $T_N$
 
-Let's consider the set of $N$-digit binary integers,
+Now, let's take another set,
+the set $T_N = \{-2^{N-1}, -2^{N-1} + 1, \ldots,-1,0,1,\ldots,2^{N-1}-1\}$
+This set also has $2^N$ elements.
+Let's not even waste time defining a new ring structure on here
+and instead just define a bijection with a ring we already have and
+transport the ring structure over via that bijection.
+Sounds like a mouthful, but it is pretty straight forward.
+Let's define a function $g: \Z/2^N\Z \to T_N$ by saying that $f([a])$
+is the unique representative of $[a]$ between $-2^{N-1}$ and $2^{N-1}-1$.
+This is clearly a bijection.
+Write $g^{-1}$ for its inverse function $g^{-1}: T_N \to \Z/2^N\Z$.
+Now we can transport the ring structure on $\Z/2^N\Z$ to $T_N$ via $g$
+by defining, for $a,b$ in $T_N$,
 
+$a + b = g(g^{-1}(a) + g^{-1}(b))$
 
+and similarly for multiplication.
+That is,
+
+$a+b = g([a] + [b]) = g([a + b])$
+
+and
+
+$a * b = g([a] * [b]) = g([a * b])$
+
+So, just as in $U_N$, arithmetic _is_ arithmetic in $\Z/2^N\Z$,
+we just replaced the classes
+
+$[0],[1],\ldots,[2^{N-1}-1], [2^{N-1}],\ldots,[2^N - 1]$
+
+with the numbers
+
+$0,1,\ldots,2^{N-1}-1, -2^{N-1},-2^{N-1} + 1,\ldots,-1$.
 
 [er]: https://mioalter.github.io/posts/2019-09-04-Equivalence-Relations.html
