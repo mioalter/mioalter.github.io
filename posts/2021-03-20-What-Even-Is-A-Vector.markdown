@@ -1,5 +1,5 @@
 ---
-title: What Even Is a Vector?
+title: What Even Is a Vector Space?
 ---
 \newcommand{\nto}{\Rightarrow}
 \newcommand{\bb}{\mathbb}
@@ -7,21 +7,23 @@ title: What Even Is a Vector?
 \newcommand{\Z}{\mathbb Z}
 \newcommand{\o}{\overrightarrow}
 
-This is a short post inspired by the AMS's "What is a...?" series to introduce
-the basic ideas from linear algebra: vector spaces and maps between them.
-My imagined audience has some, potentially hazy, recollection of vectors from
-physics and/or calculus class, but may not have even taken a course in linear algebra.
-This includes software engineering colleagues as well as friends and family who
-work in the arts, humanities, or any other area and might have an intellectual
-interest.
-My goal is to make these ideas exciting and comfortable.
+This is a very rapid introduction to linear algebra.
+The title is inspired by the AMS's "What is a...?" series.
+This will be wildly wildly hand wavy,
+but I'm hoping that by omitting details and providing intuition,
+this provides a good foundation for further study and/or
+for reading future posts :)
+At the very least, it hopefully provides enough context to
+make some things from high school phyiscs and calculus
+make a little more sense.
+
 
 # Sets
 
 A set is just a bunch of things, e.g.
 
-* $\{a,b,c\}$ is a  set,
-* the integers $\Z = \{\ldots, -2,-1,0,1,2,\ldots\}$ are a set,
+* $\{a,b,c\}$ is a set with three elements,
+* the integers $\Z = \{\ldots, -1,-1,0,1,2,\ldots\}$ are a set,
 * the real number line $\R$ is a set,
 * the 2 dimensional xy-plane
 consisting of all ordered pairs of numbers on the number line is a set,
@@ -33,8 +35,17 @@ The elements may or may not have an ordering and there can be finitely or
 infinitely many of them.
 There are no presumed operations (e.g. addition, multiplication) on a set.
 
-A function between sets $f: X \to Y$ is rule that, for every element of $X$,
-assigns an element of $Y$. Functions can be
+A function $f$ from a set $X$ to a set $Y$, written $f: X \to Y$,
+is rule that assigns to every element of $X$, an element of $Y$.
+
+* the domain of $f$ is $X$
+* the range of $f$ is $Y$
+* the image of $f$ is the subset of all $y$s in $Y$ that are
+  $f$ of something in $X$
+* the preimage of a $y$ in $Y$ is the subset of all $x$s in $X$
+  that $f$ sends to that $y$.
+
+A function can be
 
 * injective or 1-1 ("one to one")
 * surjective or onto
@@ -44,7 +55,8 @@ In words:
 
 * $f$ is injective if it never sends different things to the same place.
 Equivalently: if it sends two things to the same place, those things were the same.
-* $f$ is surjective if everying in $Y$ is $f$ of something.
+* $f$ is surjective if everything in $Y$ is $f$ of something in $X$.
+Equivalently: the image of $f$ is all of $Y$.
 * $f$ is bijective if it is both injective and surjective.
 
 We can make new sets out of old sets by taking
@@ -56,7 +68,7 @@ That is, a product of two sets is the set consisting of all ordered pairs of
 elements in the original two sets.
 So the xy-plane is $\R \times \R$ which we abbreviate to $\R^2$,
 and xyz-space is $\R \times\R\times\R$ which we abbreviate to $\R^3$.
-More generally, $\R^n$ is the set of n-tuples of real numbers.
+More generally, $\R^n$ is the set of ordered n-tuples of real numbers.
 
 # Vector Spaces
 
@@ -96,8 +108,9 @@ but still not that much
   * addition is associative
   * addition is commutative
 * we can multiply vectors by numbers
-  * what numbers?? We have to choose! We will choose the real numbers $\R$,
-  but all we need is a number system that is a [field][field].
+  * what numbers?? We get to choose!
+  In this post, we'll take "numbers" to mean the real numbers $\R$,
+  but in general, we can talk about vector spaces "over" any [field][field].
   * we have a multiplication operation that takes a number and a vector and
   produces another vector
   * zero (the number) times any vector is the zero vector
@@ -111,6 +124,46 @@ how addition and multiplication each works and how they work together.
 Everything is intuitive, but we're mathematicians here and have to spell it
 all out.
 
+# A Few Vector Spaces
+
+Let's again start kind of out there:
+if $X$ is any set, finite or infinite,
+we can make the set of all functions $X \to\R$ into a vector space.
+We define
+
+* the sum of two functions $f$ and $g$ to be the function that,
+on an input $x$, takes the value $f(x) + g(x)$.
+* multiplying a function $f$ by a number $c$ produces the function that,
+on an input $x$, takes the value $c$ times $f(x)$.
+
+This feels like a tautology, but it is not: we just made a set of functions
+into a vector space by defining addition and scaling of functions in terms
+of the addition and multiplication of numbers we already have.
+We are being very loose: to do this for real, we would have to list all
+of the things a vector space in general must satisfy and check that this one,
+with these definitions of addition and scaling,
+really does satisfy all of those things.
+Smells like an exercise to me :)
+
+This is a standard way to turn sets of functions into vector spaces.
+
+Here's another function space example: if $V$ is a vector space,
+we can make the set of _linear_ functions $V\to \R$ into a vector space
+in the same way.
+A function $f: V \to \R$ is linear if $f$
+of a sum is the sum of the $f$s and $f$ of a number times a vector is
+that number times $f$ of that vector.
+That is, we can do our vector space operations, then apply $f$, or we can apply
+$f$, then do our vector space operations on the other side:
+we get the same thing either way.
+
+Finally, here's a more familiar example:
+let's consider the set of all ordered triples
+of real numbers, but let's write them vertically as columns of numbers,
+instead of horizontally.
+
+
+![](http://www.latex2png.com/pngs/07d599c0bb53f793a1a66c3c6ab3decf.png)
 
 
 # Linear Maps
@@ -118,9 +171,8 @@ all out.
 
 # Appendix
 
-## Sets
 
-### Notation
+## Notation
 * The symbol $\in$ means "is in" or "is an element of".
 * We can also describe sets using the notation
 $\{ \text{ elements } \vert \text{ conditions }\}$
@@ -128,10 +180,10 @@ where "$\vert$" means "such that" so we list the elements then the conditions
 that they satisfy. For example,
   * $\{ a \in \Z \vert a\text{ is even}\}$ is one notation for the
 even integers,
-  * $\{(a,b) \vert a\in \R, b\in \R, b > 1\}$ is one notation for the subset of the xy-plane consisting of pairs whose second coordinate is positive.
-  * $\{(a,b)\in\R\times\R \vert b > 0\}$ is another way to write the same set.
+  * $\{(a,b) \vert a\in \R, b\in \R, b > 0\}$ is one notation for the subset of the xy-plane consisting of pairs whose second coordinate is positive.
+  * $\{(a,b)\in\R^2 \vert b > 0\}$ is another way to write the same set.
 
-### Exercises
+## Exercises
 
 * Is $f: \R \to \R$ defined by $f(x) = x^2$ injective? surjective? bijective?
 * Is $f: \R \to \R$ defined by $f(x) = x + 3$ injective? surjective? bijective?
