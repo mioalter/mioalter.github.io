@@ -7,17 +7,18 @@ title: What Even Is a Vector Space?
 \newcommand{\Z}{\mathbb Z}
 \newcommand{\o}{\overrightarrow}
 
-This is a very rapid introduction to linear algebra.
-The title is inspired by the AMS's "What is a...?" series.
-This will be wildly wildly hand wavy,
-but I'm hoping that by omitting details and providing intuition,
-this provides a good foundation for further study and/or
-for reading future posts :)
-At the very least, it hopefully provides enough context to
-make some things from high school phyiscs and calculus
-make a little more sense.
 
-# $\R^n$
+This is a very rapid and wildly hand wavy introduction to linear algebra.
+The name is inspired by the AMS's "What is a...?" series
+and it both an homage and an abuse:
+we definitely will get to the good stuff quickly,
+but we will not even give rigorous definitions of anything.
+The point is to introduce the general theory, intuitively at least,
+then see how familiar and unfamilar examples fit into it.
+The goal is to put the familiar into context and make the unfamilar
+seem plausible and hopefully even cool.
+
+# Sets
 
 We write $\R$ for the real number line,
 $\R\times \R$ or $\R^2$ for the set of ordered pairs of real numbers,
@@ -29,28 +30,16 @@ from physics and calculus classes.
 
 We'll see that these, and many other things, are vector spaces.
 
-# Vector Spaces
+When we say "numbers" we will mean $\R$ unless we say so.
 
-We'll launch right in to vector spaces in general first, then circle back
-to connect what we get to the things we learned in high school.
+# Vector Spaces
 
 A [vector space] is
 
 * a set
-* whose elements we can add
-* and multiply by numbers
+* in which we can add elements
+* and multilpy them by numbers
 * subject to some conditions
-
-This is obviously very vague, but the point is that a vector space is
-a set, with some operations, that satisfy some conditions.
-There is nothing intrinsic about the elements that makes them vectors,
-they are vectors becasue they are elements of a set with operations that
-satisfy the conditions that make it a vector space.
-One upshot of this is that a set may be a vector space and it may
-also be something else, too. The elements are vectors when you are
-considering the set as a vector space,
-but they are not vectors in and of themselves, all the time, no matter what,
-so you are free to stop thinking about them as vectors whenever you want.
 
 # Subspaces
 
@@ -61,26 +50,23 @@ A vector [subspace] is a subset of a vector space which is also a vector space.
 A [basis] of a vector space is a subset of vectors in terms of which
 you can write any vector in the entire vector space.
 
-They satisfy two conditions:
+Bases satisfy two conditions:
 
-* basis vectors cannot be written in terms of each other
-* every vector can be written uniquely in terms of the basis vectors
-
-Observation: if the pair $v$ and $w$ forms basis,
-then the pair $v+w$ and $v-w$ does, too.
+* linear independence: basis vectors cannot be written in terms of each other
+* spanning: every vector can be written uniquely in terms of the basis vectors
 
 A vector space has infinitely many bases.
 
 # Dimension
 
 The dimension of a vector space is the number of vectors in a basis.
-Theorem: this number is the same for any basis.
+This number is the same for any basis (theorem).
 
 # Linear Maps
 
-A linear map / transformation between vector spaces is one for which
-you can do vector space operations before or after you apply it and you get
-the same thing.
+A linear map (or linear transformation) between vector spaces is a function
+for which you can do vector space operations before or after you apply it
+and you get the same thing.
 That is, $f: V\to W$ is linear if
 $f(v+w) = f(v) + f(w)$ and $f(cv) = c(f(v))$
 where $c$ is a number and $v$ and $w$ are vectors.
@@ -90,8 +76,67 @@ where $c$ is a number and $v$ and $w$ are vectors.
 An [inner product] on a vector space is a _bilinear_ function that maps
 pairs of vectors to numbers.
 Bilinear means: it takes two inputs and it is linear in each input, separately.
+We can use inner products to compute lengths of vectors,
+angles between them, and project vectors onto other vectors.
 
-# What About Arrows?
+# Examples
+
+## $\R$
+The real numbers can be made into a vector space using ordinary
+addition and multiplication.
+Any nonzero number is a basis vector and forms a full basis so
+it has dimension $1$.
+
+## $\R^2$
+In high school we say:
+
+* points in the plane have x and y coordinates and we write them as pairs $(x,y)$,
+* vectors are arrows that we write as $\langle x, y\rangle$,
+
+Tthe correspondence: given a point $(x,y)$,
+we can draw the arrow from $(0,0)$ to that point and, given an arrow,
+we can put its tail at $(0,0)$ and find its head.
+Arrows have a magnitude and direction.
+We can multiply them by numbers and slide them around to add them together
+as long as we don't change their magnitude or direction.
+We often write $\hat{i}$ for $\langle 1,0\rangle$
+and $\hat{j}$ for $\langle 0,1\rangle$.
+These are the arrows that point along the x and y axes,
+starting from $(0,0)$ and have length $1$.
+
+We can write any arrow $\langle a,b\rangle$ as
+$a\langle 1,0\rangle + b\langle 0,1\rangle = a \hat i + b \hat j$.
+
+We can now say that $\hat i$ and $\hat j$ form a basis,
+the dimesion of the space is $2$.
+There are lots of other bases,
+e.g. $\hat i + hat j$ and $\hat j - \hat i$ is another perfectly good basis.
+
+## Functions on sets
+
+## Duals
+
+## Differential Equations
+
+## Wave Mechanics
+
+
+# Matrices
+
+A matrix is a particular representation of a linear map of vector spaces.
+If $V$ is an $n$-dimensional vector space, $W$ is an $m$-dimensional vector space,
+and $f: V \to W$ is a linear map
+then if we choose a basis for $V$ and a basis for $W$ we can write $f$
+as an $m \times n$ rectangle of numbers.
+
+
+
+
+
+
+
+
+
 
 
 
@@ -188,6 +233,14 @@ even integers,
 [field]: https://en.wikipedia.org/wiki/Field_(mathematics)
 [subspace]: https://simple.wikipedia.org/wiki/Vector_subspace
 
+There is nothing intrinsic about the elements that makes them vectors,
+they are vectors becasue they are elements of a set with operations that
+satisfy the conditions that make it a vector space.
+One upshot of this is that a set may be a vector space and it may
+also be something else, too. The elements are vectors when you are
+considering the set as a vector space,
+but they are not vectors in and of themselves, all the time, no matter what,
+so you are free to stop thinking about them as vectors whenever you want.
 
 # Sets
 

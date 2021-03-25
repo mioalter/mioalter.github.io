@@ -29,38 +29,53 @@
     </section>
     <section>
         
-<p>This is a very rapid introduction to linear algebra. The title is inspired by the AMS’s “What is a…?” series. This will be wildly wildly hand wavy, but I’m hoping that by omitting details and providing intuition, this provides a good foundation for further study and/or for reading future posts :) At the very least, it hopefully provides enough context to make some things from high school phyiscs and calculus make a little more sense.</p>
-<h1 id="mathbb-rn"><span class="math inline">ℝ<sup><em>n</em></sup></span></h1>
+<p>This is a very rapid and wildly hand wavy introduction to linear algebra. The name is inspired by the AMS’s “What is a…?” series and it both an homage and an abuse: we definitely will get to the good stuff quickly, but we will not even give rigorous definitions of anything. The point is to introduce the general theory, intuitively at least, then see how familiar and unfamilar examples fit into it. The goal is to put the familiar into context and make the unfamilar seem plausible and hopefully even cool.</p>
+<h1 id="sets">Sets</h1>
 <p>We write <span class="math inline">ℝ</span> for the real number line, <span class="math inline">ℝ × ℝ</span> or <span class="math inline">ℝ<sup>2</sup></span> for the set of ordered pairs of real numbers, <span class="math inline">ℝ × ℝ × ℝ</span> or <span class="math inline">ℝ<sup>3</sup></span> for the set of ordered triples of real numbers, and <span class="math inline">ℝ<sup><em>n</em></sup></span> (where <span class="math inline"><em>n</em></span> is a positive whole number) for the set of ordered <span class="math inline"><em>n</em></span>-tuples of real numbers. <span class="math inline">ℝ<sup>2</sup></span> and <span class="math inline">ℝ<sup>3</sup></span> are the xy-plane and xyz-space, respectively, from physics and calculus classes.</p>
 <p>We’ll see that these, and many other things, are vector spaces.</p>
+<p>When we say “numbers” we will mean <span class="math inline">ℝ</span> unless we say so.</p>
 <h1 id="vector-spaces">Vector Spaces</h1>
-<p>We’ll launch right in to vector spaces in general first, then circle back to connect what we get to the things we learned in high school.</p>
 <p>A <a href="https://en.wikipedia.org/wiki/Vector_space">vector space</a> is</p>
 <ul>
 <li>a set</li>
-<li>whose elements we can add</li>
-<li>and multiply by numbers</li>
+<li>in which we can add elements</li>
+<li>and multilpy them by numbers</li>
 <li>subject to some conditions</li>
 </ul>
-<p>This is obviously very vague, but the point is that a vector space is a set, with some operations, that satisfy some conditions. There is nothing intrinsic about the elements that makes them vectors, they are vectors becasue they are elements of a set with operations that satisfy the conditions that make it a vector space. One upshot of this is that a set may be a vector space and it may also be something else, too. The elements are vectors when you are considering the set as a vector space, but they are not vectors in and of themselves, all the time, no matter what, so you are free to stop thinking about them as vectors whenever you want.</p>
 <h1 id="subspaces">Subspaces</h1>
 <p>A vector <a href="https://simple.wikipedia.org/wiki/Vector_subspace">subspace</a> is a subset of a vector space which is also a vector space.</p>
 <h1 id="bases">Bases</h1>
 <p>A <a href="https://en.wikipedia.org/wiki/Basis_(linear_algebra)">basis</a> of a vector space is a subset of vectors in terms of which you can write any vector in the entire vector space.</p>
-<p>They satisfy two conditions:</p>
+<p>Bases satisfy two conditions:</p>
 <ul>
-<li>basis vectors cannot be written in terms of each other</li>
-<li>every vector can be written uniquely in terms of the basis vectors</li>
+<li>linear independence: basis vectors cannot be written in terms of each other</li>
+<li>spanning: every vector can be written uniquely in terms of the basis vectors</li>
 </ul>
-<p>Observation: if the pair <span class="math inline"><em>v</em></span> and <span class="math inline"><em>w</em></span> forms basis, then the pair <span class="math inline"><em>v</em> + <em>w</em></span> and <span class="math inline"><em>v</em> − <em>w</em></span> does, too.</p>
 <p>A vector space has infinitely many bases.</p>
 <h1 id="dimension">Dimension</h1>
-<p>The dimension of a vector space is the number of vectors in a basis. Theorem: this number is the same for any basis.</p>
+<p>The dimension of a vector space is the number of vectors in a basis. This number is the same for any basis (theorem).</p>
 <h1 id="linear-maps">Linear Maps</h1>
-<p>A linear map / transformation between vector spaces is one for which you can do vector space operations before or after you apply it and you get the same thing. That is, <span class="math inline"><em>f</em> : <em>V</em> → <em>W</em></span> is linear if <span class="math inline"><em>f</em>(<em>v</em> + <em>w</em>) = <em>f</em>(<em>v</em>) + <em>f</em>(<em>w</em>)</span> and <span class="math inline"><em>f</em>(<em>c</em><em>v</em>) = <em>c</em>(<em>f</em>(<em>v</em>))</span> where <span class="math inline"><em>c</em></span> is a number and <span class="math inline"><em>v</em></span> and <span class="math inline"><em>w</em></span> are vectors.</p>
+<p>A linear map (or linear transformation) between vector spaces is a function for which you can do vector space operations before or after you apply it and you get the same thing. That is, <span class="math inline"><em>f</em> : <em>V</em> → <em>W</em></span> is linear if <span class="math inline"><em>f</em>(<em>v</em> + <em>w</em>) = <em>f</em>(<em>v</em>) + <em>f</em>(<em>w</em>)</span> and <span class="math inline"><em>f</em>(<em>c</em><em>v</em>) = <em>c</em>(<em>f</em>(<em>v</em>))</span> where <span class="math inline"><em>c</em></span> is a number and <span class="math inline"><em>v</em></span> and <span class="math inline"><em>w</em></span> are vectors.</p>
 <h1 id="inner-products">Inner products</h1>
-<p>An <a href="https://en.wikipedia.org/wiki/Inner_product_space">inner product</a> on a vector space is a <em>bilinear</em> function that maps pairs of vectors to numbers. Bilinear means: it takes two inputs and it is linear in each input, separately.</p>
-<h1 id="what-about-arrows">What About Arrows?</h1>
+<p>An <a href="https://en.wikipedia.org/wiki/Inner_product_space">inner product</a> on a vector space is a <em>bilinear</em> function that maps pairs of vectors to numbers. Bilinear means: it takes two inputs and it is linear in each input, separately. We can use inner products to compute lengths of vectors, angles between them, and project vectors onto other vectors.</p>
+<h1 id="examples">Examples</h1>
+<h2 id="mathbb-r"><span class="math inline">ℝ</span></h2>
+<p>The real numbers can be made into a vector space using ordinary addition and multiplication. Any nonzero number is a basis vector and forms a full basis so it has dimension <span class="math inline">1</span>.</p>
+<h2 id="mathbb-r2"><span class="math inline">ℝ<sup>2</sup></span></h2>
+<p>In high school we say:</p>
+<ul>
+<li>points in the plane have x and y coordinates and we write them as pairs <span class="math inline">(<em>x</em>, <em>y</em>)</span>,</li>
+<li>vectors are arrows that we write as <span class="math inline">⟨<em>x</em>, <em>y</em>⟩</span>,</li>
+</ul>
+<p>Tthe correspondence: given a point <span class="math inline">(<em>x</em>, <em>y</em>)</span>, we can draw the arrow from <span class="math inline">(0, 0)</span> to that point and, given an arrow, we can put its tail at <span class="math inline">(0, 0)</span> and find its head. Arrows have a magnitude and direction. We can multiply them by numbers and slide them around to add them together as long as we don’t change their magnitude or direction. We often write <span class="math inline"><em>î</em></span> for <span class="math inline">⟨1, 0⟩</span> and <span class="math inline"><em>ĵ</em></span> for <span class="math inline">⟨0, 1⟩</span>. These are the arrows that point along the x and y axes, starting from <span class="math inline">(0, 0)</span> and have length <span class="math inline">1</span>.</p>
+<p>We can write any arrow <span class="math inline">⟨<em>a</em>, <em>b</em>⟩</span> as <span class="math inline"><em>a</em>⟨1, 0⟩ + <em>b</em>⟨0, 1⟩ = <em>a</em><em>î</em> + <em>b</em><em>ĵ</em></span>.</p>
+<p>We can now say that <span class="math inline"><em>î</em></span> and <span class="math inline"><em>ĵ</em></span> form a basis, the dimesion of the space is <span class="math inline">2</span>. There are lots of other bases, e.g. <span class="math inline"><em>î</em> + <em>h</em><em>a</em><em>t</em><em>j</em></span> and <span class="math inline"><em>ĵ</em> − <em>î</em></span> is another perfectly good basis.</p>
+<h2 id="functions-on-sets">Functions on sets</h2>
+<h2 id="duals">Duals</h2>
+<h2 id="differential-equations">Differential Equations</h2>
+<h2 id="wave-mechanics">Wave Mechanics</h2>
+<h1 id="matrices">Matrices</h1>
+<p>A matrix is a particular representation of a linear map of vector spaces. If <span class="math inline"><em>V</em></span> is an <span class="math inline"><em>n</em></span>-dimensional vector space, <span class="math inline"><em>W</em></span> is an <span class="math inline"><em>m</em></span>-dimensional vector space, and <span class="math inline"><em>f</em> : <em>V</em> → <em>W</em></span> is a linear map then if we choose a basis for <span class="math inline"><em>V</em></span> and a basis for <span class="math inline"><em>W</em></span> we can write <span class="math inline"><em>f</em></span> as an <span class="math inline"><em>m</em> × <em>n</em></span> rectangle of numbers.</p>
 <h1 id="some-examples">Some Examples</h1>
 <p>Let’s again start kind of out there: if <span class="math inline"><em>X</em></span> is any set, finite or infinite, we can make the set of all functions <span class="math inline"><em>X</em> → ℝ</span> into a vector space. We define</p>
 <ul>
@@ -94,7 +109,8 @@
 <li>Is the <span class="math inline"><em>f</em></span> from the xy-plane to xyz-space defined by <span class="math inline"><em>f</em>(<em>x</em>, <em>y</em>) = (<em>x</em>, <em>y</em>, 0)</span> injective? surjective? bijective?</li>
 <li>Express what it means for a function to be injective/surjective in symbols.</li>
 </ul>
-<h1 id="sets">Sets</h1>
+<p>There is nothing intrinsic about the elements that makes them vectors, they are vectors becasue they are elements of a set with operations that satisfy the conditions that make it a vector space. One upshot of this is that a set may be a vector space and it may also be something else, too. The elements are vectors when you are considering the set as a vector space, but they are not vectors in and of themselves, all the time, no matter what, so you are free to stop thinking about them as vectors whenever you want.</p>
+<h1 id="sets-1">Sets</h1>
 <p>A set is just a bunch of things, e.g.</p>
 <ul>
 <li><span class="math inline">{<em>a</em>, <em>b</em>, <em>c</em>}</span> is a set with three elements,</li>
