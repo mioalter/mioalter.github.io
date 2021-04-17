@@ -18,10 +18,12 @@ and lose the forest in the trees.
 
 # Vector spaces
 A [vector space][vs] is a set in which we can add things and scale them by numbers.
+
 A [basis][b] of a vector space $V$ is a subset of vectors in terms of which we can
 write any vector in $V$, that is, a set of coordinate vectors.
 The dimension of a vector space is the number of vectors in any basis.
 (Theorem: this number is always the same).
+
 A map between vector spaces $V$ and $W$ is a [linear map][lm], that is,
 one that preserves the vector space operations.
 Given choices of bases for $V$ and $W$, we can write a linear map $f$
@@ -46,10 +48,9 @@ $\Rn$ is the set of ordered $n$-tuples (lists of length $n$) of numbers.
 It is a vector space by component-wise addition and scaling.
 $\R^2$ is the set of ordered pairs of numbers, the xy-plane,
 $\R^3$ is the set of ordered triples of numbers, xyz-space.
-We'll mostly stick with $\R^2$ and $\R^3$.
 
 The endlessly confusing thing is that there are many different copies of
-$\Rn$ that we often consider the same $\Rn$.
+$\Rn$ that we often consider the same.
 The point of this post is that it is much easier to understand derivatives
 if we are explicit about what these different $\Rn$s are and which vectors
 live in which ones.
@@ -76,9 +77,9 @@ $df_p: T_p\Rm \to T_{f(p)}\Rn$.
 
 So, yes, "the derivative at $p$" is a higher-order function that
 takes a function $f$, and produces another function $df_p$,
-but it is more more than that:
+but it is more than that:
 if $g:\Rn \to\R^k$ is another function, the [Chain Rule][cr] says that
-$d(gf)_p = dg_{(f(p))} df_p$, that is, the derivative of the composition
+$d(gf)_p = dg_{f(p)} df_p$, that is, the derivative of the composition
 is the composition of the derivatives.
 This says that "take the derivative at $p$" is a functor:
 not only does it send differentiable functions between Euclidean spaces
@@ -89,8 +90,21 @@ and identity maps to identity maps.
 
 # Derivatives by example
 
+Let's see some examples.
+
+Consider now $f:\R\to\R^2$ given by $f(t) = (t^2, t^3)$.
+According to high school calculus,
+the derivative of this is $f'(t) = (2t, 3t^2)$.
+And somehow, even though we were
 
 
+Consider $f:\R\to\R$ given by $f(x) = x^2 + x + 1$.
+The derivative $f'(x) = 2x + 1$
+so the derivative of $f$ at a point $p$ is $f'(p) = 2p + 1$.
+How is that a linear map of tangent spaces?
+Both tangent spaces are 1-dimensional and a linear map of
+1-dimensional vector spaces is given by multiplication by a number.
+That number, at $p$ in $\R$, is $2p+1$.
 
 
 
