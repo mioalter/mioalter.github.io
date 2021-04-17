@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Altered States</title>
+        <link rel="stylesheet" href="../css/default.css" />
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <a href="../">ALTERED STATES</a>
+            </div>
+            <nav>
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+            </nav>
+        </header>
+
+        <main role="main">
+            <h1>What even is derivative?</h1>
+            <article>
+    <section class="header">
+        Posted on April 17, 2021
+        
+    </section>
+    <section>
+        
+<p>This is a short post to elaborate on this twitter thread as well the ~ once a month epiphany that functional programmers have that the derivative is a higher order function. It is, but, even more than that, it is a functor. This will be a wildly fast and incomplete tour of these ideas. I would rather get to the good stuff and let readers fill in details if they want than get bogged down in definitions and lose the forest in the trees.</p>
+<h1 id="vector-spaces">Vector spaces</h1>
+<p>A <a href="https://en.wikipedia.org/wiki/Vector_space">vector space</a> is a set in which we can add things and scale them by numbers. A <a href="https://en.wikipedia.org/wiki/Basis_(linear_algebra)">basis</a> of a vector space <span class="math inline"><em>V</em></span> is a subset of vectors in terms of which we can write any vector in <span class="math inline"><em>V</em></span>, that is, a set of coordinate vectors. The dimension of a vector space is the number of vectors in any basis. (Theorem: this number is always the same). A map between vector spaces <span class="math inline"><em>V</em></span> and <span class="math inline"><em>W</em></span> is a <a href="https://en.wikipedia.org/wiki/Linear_map">linear map</a>, that is, one that preserves the vector space operations. Given choices of bases for <span class="math inline"><em>V</em></span> and <span class="math inline"><em>W</em></span>, we can write a linear map <span class="math inline"><em>f</em></span> as a matrix: the columns of a matrix representation of <span class="math inline"><em>f</em></span> are vectors in <span class="math inline"><em>W</em></span> (written in terms of our chosen basis of <span class="math inline"><em>W</em></span>) which are where <span class="math inline"><em>f</em></span> sends each of our chosen basis vectors of <span class="math inline"><em>V</em></span>. That is, a matrix is a specific representation of a linear map that depends on choices; making different choices gives us a different representation of the same linear map.</p>
+<p>Observe that there is nothing intrinsic about the elements of a vector space that makes them vectors, they are vectors because we can perform vector space operations on them. A single set can be a vector space and can also plenty of other things— a group, a ring, an affine space, a topological space, and/or a metric space— and the elements of that set are only vectors when we are thinking of it as a vector space.</p>
+<h1 id="mathbbrn"><span class="math inline">ℝ<sup><em>n</em></sup></span></h1>
+<p>When we say “numbers”, we mean numbers on the real number line <span class="math inline">ℝ</span>.</p>
+<p>For any whole number <span class="math inline"><em>n</em> &gt; 0</span>, <span class="math inline">ℝ<sup><em>n</em></sup></span> is the set of ordered <span class="math inline"><em>n</em></span>-tuples (lists of length <span class="math inline"><em>n</em></span>) of numbers. It is a vector space by component-wise addition and scaling. <span class="math inline">ℝ<sup>2</sup></span> is the set of ordered pairs of numbers, the xy-plane, <span class="math inline">ℝ<sup>3</sup></span> is the set of ordered triples of numbers, xyz-space. We’ll mostly stick with <span class="math inline">ℝ<sup>2</sup></span> and <span class="math inline">ℝ<sup>3</sup></span>.</p>
+<p>The endlessly confusing thing is that there are many different copies of <span class="math inline">ℝ<sup><em>n</em></sup></span> that we often consider the same <span class="math inline">ℝ<sup><em>n</em></sup></span>. The point of this post is that it is much easier to understand derivatives if we are explicit about what these different <span class="math inline">ℝ<sup><em>n</em></sup></span>s are and which vectors live in which ones.</p>
+<h1 id="tangent-and-cotangent-spaces">Tangent and Cotangent spaces</h1>
+<p>Given a point <span class="math inline"><em>p</em></span> in <span class="math inline">ℝ<sup><em>n</em></sup></span>, the tangent space at <span class="math inline"><em>p</em></span> is the set of vectors <span class="math inline"><em>q</em> − <em>p</em></span> for <span class="math inline"><em>q</em></span> in <span class="math inline">ℝ<sup><em>n</em></sup></span>. That is, it is a copy of <span class="math inline">ℝ<sup><em>n</em></sup></span> whose origin is at <span class="math inline"><em>p</em></span>. Let’s write it as <span class="math inline"><em>T</em><sub><em>p</em></sub>ℝ<sup><em>n</em></sup></span>. Note that we have one of these for every <span class="math inline"><em>p</em></span> in <span class="math inline">ℝ<sup><em>n</em></sup></span>, so, lots of different <span class="math inline">ℝ<sup><em>n</em></sup></span>s.</p>
+<p>The cotangent space at <span class="math inline"><em>p</em></span> is the set of linear maps <span class="math inline"><em>T</em><sub><em>p</em></sub>ℝ<sup><em>n</em></sup> → ℝ</span>. This is a vector space because we can add and scale linear maps and we still get linear maps. Let’s write this as <span class="math inline"><em>T</em><sub><em>p</em></sub><sup>*</sup>ℝ<sup><em>n</em></sup></span>.</p>
+<h1 id="derivatives">Derivatives</h1>
+<p>Given a function <span class="math inline"><em>f</em> : ℝ<sup><em>m</em></sup> → ℝ<sup><em>n</em></sup></span> and a point <span class="math inline"><em>p</em></span> in <span class="math inline">ℝ<sup><em>m</em></sup></span>, the derivative of <span class="math inline"><em>f</em></span> at <span class="math inline"><em>p</em></span> is a linear map of tangent spaces <span class="math inline"><em>d</em><em>f</em><sub><em>p</em></sub> : <em>T</em><sub><em>p</em></sub>ℝ<sup><em>m</em></sup> → <em>T</em><sub><em>f</em>(<em>p</em>)</sub>ℝ<sup><em>n</em></sup></span>.</p>
+<p>So, yes, “the derivative at <span class="math inline"><em>p</em></span>” is a higher-order function that takes a function <span class="math inline"><em>f</em></span>, and produces another function <span class="math inline"><em>d</em><em>f</em><sub><em>p</em></sub></span>, but it is more more than that: if <span class="math inline"><em>g</em> : ℝ<sup><em>n</em></sup> → ℝ<sup><em>k</em></sup></span> is another function, the <a href="https://en.wikipedia.org/wiki/Chain_rule">Chain Rule</a> says that <span class="math inline"><em>d</em>(<em>g</em><em>f</em>)<sub><em>p</em></sub> = <em>d</em><em>g</em><sub>(<em>f</em>(<em>p</em>))</sub><em>d</em><em>f</em><sub><em>p</em></sub></span>, that is, the derivative of the composition is the composition of the derivatives. This says that “take the derivative at <span class="math inline"><em>p</em></span>” is a functor: not only does it send differentiable functions between Euclidean spaces to linear maps between their tangent spaces, it sends composition to composition, and identity maps to identity maps. (Really, <em>pointed</em> Euclidean spaces because we need to choose a point <span class="math inline"><em>p</em></span>.)</p>
+<h1 id="derivatives-by-example">Derivatives by example</h1>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </footer>
+    </body>
+</html>
