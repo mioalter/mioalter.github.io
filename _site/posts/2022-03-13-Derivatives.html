@@ -29,7 +29,52 @@
         
     </section>
     <section>
-        
+        <h1 id="gauss-in-the-hauss">Gauss in the Hauss</h1>
+<h1 id="what-even-is-a-derivative">What even is a derivative?</h1>
+<p>We’ll do examples and make a few general claims along the way.</p>
+<p>The tl;dr is: we usually think of the values of a function, its outputs,
+and the values its derivative as living in the same place,
+but they actually don’t.
+When we think of them as living in the same place, it is because there
+is some way to relate these two places so that we can think of them as the same,
+but this is much more confusing than just thinking of them as different.</p>
+<p>Let’s suppose we have a particle that is confined to move along a line and
+write down a function that desribes its position as a function of time.
+Let’s picture our line as being oriented so that numbers get more negative
+going to the left and more positive going to the right, with zero in the middle.
+Let’s say that our position function is <span class="math inline"><em>f</em>(<em>t</em>) = <em>t</em><sup>2</sup></span>.
+This is just the function that takes a number and squares it.
+We could just as well write it as <span class="math inline"><em>f</em>(<em>x</em>) = <em>x</em><sup>2</sup></span>, but let’s write it as
+<span class="math inline"><em>f</em>(<em>t</em>) = <em>t</em><sup>2</sup></span> to remind ourselves to think of the input as time.</p>
+<p>The derivative of <span class="math inline"><em>f</em></span> at time <span class="math inline"><em>t</em> = 3</span> is the number <span class="math inline">6</span>, but what is that number?
+It is the rate of change of the position of our particle: its velocity.
+Saying “the derivative of <span class="math inline"><em>f</em></span> at <span class="math inline"><em>t</em> = 3</span> is <span class="math inline">6</span>” means
+“at time <span class="math inline"><em>t</em> = 3</span>, our particle is moving at a speed of <span class="math inline">6</span> to the right, i.e.,
+in the positive direction.”</p>
+<p>At time <span class="math inline"><em>t</em> = 3</span> the position of our particle is <span class="math inline">3<sup>2</sup> = 9</span>.
+Is there some time <span class="math inline"><em>t</em></span> for which the position of our particle is <span class="math inline">6</span>?
+Yes, <span class="math inline">$t = \sqrt6$</span>.
+Do the <span class="math inline">6</span> which is the position of our particle at time
+<span class="math inline">$t = \sqrt 6$</span> and the <span class="math inline">6</span> which is its velocity at time <span class="math inline"><em>t</em> = 3</span> have anything to do
+with each other? No. They are both numbers, but they mean different things.
+Does the number <span class="math inline">6</span> which is the velocity of our particle at time <span class="math inline"><em>t</em> = 3</span> have
+anything to do with the number <span class="math inline">9</span> which is the position of our particle at time <span class="math inline"><em>t</em> = 3</span>
+or with the positions of the particle at different times?
+Sure! The way that we compute that <span class="math inline">6</span> is by measuring the distance from
+position <span class="math inline">9</span> to nearby positions, computing a ratio, and taking a limit (using the definition of the derivative).
+So, yeah, velocities and positions are definitely related, but do the numbers which are velocities
+and the numbers which are positions live in the same number line? No way.</p>
+<p>Now let’s tweak our function a little and make a new function <span class="math inline"><em>g</em>(<em>t</em>) = (<em>t</em>,<em>t</em><sup>2</sup>)</span>.
+This produces values which are not single numbers, put pairs of numbers which
+we can think of as points in the xy-plane.
+As <span class="math inline"><em>t</em></span> varies, $g(t) traces out a parabola in the xy-plane: a bowl shape
+that sits on the <span class="math inline"><em>x</em></span>-axis, and opens up toward the positive <span class="math inline"><em>y</em></span>-axis.
+This parabola is actually the graph of our function <span class="math inline"><em>f</em></span>, this is just not the way
+we usually desribe it.
+We can think of <span class="math inline"><em>g</em></span> as describing the position of a particle that moves in a
+parabolic curve in the xy-plane.
+At time <span class="math inline"><em>t</em> = 3</span>, the position <span class="math inline"><em>g</em>(3)</span> of this particle is <span class="math inline">(3,9)</span> and if we compute
+the derivative of <span class="math inline"><em>g</em></span> at time <span class="math inline"><em>t</em> = 3</span>, we get <span class="math inline">(1,6)</span></p>
     </section>
 </article>
 
