@@ -3,6 +3,6 @@ title: Contact
 ---
 
 * firstnamelastname at gmail
-* [Twitter](https://twitter.com/mioalter)
-* [Github](https://github.com/mioalter)
-* [LinkedIn](https://www.linkedin.com/in/mioalter)
+* [twitter](https://twitter.com/mioalter)
+* [github](https://github.com/mioalter)
+* [linkedin](https://www.linkedin.com/in/mioalter)
