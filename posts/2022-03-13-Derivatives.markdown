@@ -11,54 +11,82 @@ title: What even is a derivative? (Gauss in the Hauss 0)
 
 We'll do examples and make a few general claims along the way.
 
-The tl;dr is: we usually think of the values of a function, its outputs,
-and the values its derivative as living in the same place,
-but they actually don't.
-When we think of them as living in the same place, it is because there
-is some way to relate these two places so that we can think of them as the same,
-but this is much more confusing than just thinking of them as different.
+Let's start with the function that takes a number and square it, $f(x) = x^2$.
+The derivative of $f$ is another function, $df(x)$.
+We can derive a formula for $df(x)$ from the formula for $f(x)$ using
+the (limit) definition of the derivative.
+When $f(x)=x^2$, $df(x) = 2x$.
+At $x=3$, say, the value $df(3)=6$ is a number,
+it is the rate at which $f(x)$ is changing at $x=3$.
 
-Let's suppose we have a particle that is confined to move along a line and
-write down a function that desribes its position as a function of time.
-Let's picture our line as being oriented so that numbers get more negative
-going to the left and more positive going to the right, with zero in the middle.
-Let's say that our position function is $f(t) = t^2$.
-This is just the function that takes a number and squares it.
-We could just as well write it as $f(x) = x^2$, but let's write it as
-$f(t) = t^2$ to remind ourselves to think of the input as time.
+The graph of $f$ in the $xy$-plane is the set of points $(x,y)$ for which
+$y = f(x) = x^2$, e.g. $(-10, 100), (-4,16), (2,4), (3,9), \ldots$.
+The derivative of $f$ at $x=3$, $df(3) = 6$,
+is the slope of the line tangent to the graph at the point $(3,9)$.
 
-The derivative of $f$ at time $t=3$ is the number $6$, but what is that number?
-It is the rate of change of the position of our particle: its velocity.
-Saying "the derivative of $f$ at $t=3$ is $6$" means
-"at time $t=3$, our particle is moving at a speed of $6$ to the right, i.e.,
-in the positive direction."
+Hopefully this all rings some bells.
 
-At time $t=3$ the position of our particle is $3^2 = 9$.
-Is there some time $t$ for which the position of our particle is $6$?
-Yes, $t = \sqrt6$.
-Do the $6$ which is the position of our particle at time
-$t = \sqrt 6$ and the $6$ which is its velocity at time $t=3$ have anything to do
-with each other? No. They are both numbers, but they mean different things.
-Does the number $6$ which is the velocity of our particle at time $t=3$ have
-anything to do with the number $9$ which is the position of our particle at time $t=3$
-or with the positions of the particle at different times?
-Sure! The way that we compute that $6$ is by measuring the distance from
-position $9$ to nearby positions, computing a ratio, and taking a limit (using the definition of the derivative).
-So, yeah, velocities and positions are definitely related, but do the numbers which are velocities
-and the numbers which are positions live in the same number line? No way.
+Let's give a couple of physicsy interpretations of $f$.
 
-Now let's tweak our function a little and make a new function $g(t) = (t, t^2)$.
-This produces values which are not single numbers, put pairs of numbers which
-we can think of as points in the xy-plane.
-As $t$ varies, $g(t) traces out a parabola in the xy-plane: a bowl shape
-that sits on the $x$-axis, and opens up toward the positive $y$-axis.
-This parabola is actually the graph of our function $f$, this is just not the way
-we usually desribe it.
-We can think of $g$ as describing the position of a particle that moves in a
-parabolic curve in the xy-plane.
-At time $t=3$, the position $g(3)$ of this particle is $(3,9)$ and if we compute
-the derivative of $g$ at time $t=3$, we get $(1,6)$
+Let's imagine that we have an infinitely long, straight, particle accelerator,
+and that $f(x)$ is the position as a function of time of a particle in it.
+With this interpretation, the position of the particle at time $x=3$
+is $f(3) = 9$ and its velocity is $df(3) = 6$.
+If we measure time in seconds and a 1-unit change in position
+means that we move 1 meter, then this velocity is $6$ meters per second.
 
+Alternatively, let's imagine that we have an infinitely long metal rod
+and that $f(x)$ is the temperature of the rod as a function of position.
+With this interpretation, the temperature of the rod at position $x=3$
+is $f(3) = 9$ and the rate at which the temperature is changing with
+respect to position is $6$.
+If we measure temperature in degrees Celsius and a 1-unit change in position
+corresponds to moving 1 meter,
+this $6$ is in units of degrees Celsius per meter.
+
+The point of these interpretations is just to emphasize that even though
+$f(3)$ and $df(3)$ are both numbers, they are not the same kinds of numbers.
+They mean different things, they have different units.
+
+Let's tweak our function a little to make a new function $g(t) = (t,t^2)$.
+The values of this new function are not individual numbers,
+but pairs of numbers which we think of as points in the $xy$-plane.
+It is closely related to our original $f$: as $t$ varies, it traces out
+the graph of $f$. We can think of it as the position as a function of time
+of a particle moving along the graph of $f$ in the $xy$-plane.
+
+The derivative of this new function $g$ is also a function that takes values
+in the $xy$-play, $df(x) = (1,2t)$.
+The derivative at $t=3$, $df(3) = (1,6)$,
+is the tangent vector to the curve $g(t)$ at the point $g(3)=(3,9)$.
+In our particle interpretation, $(1,6)$ is the velocity of our particle
+at time $t=3$ when its position is $(3,9)$.
+We already said that position and velocity are different kinds of things.
+
+We can think pairs $(x,y)$ in the $xy$-plane
+either as points or as arrows/vectors.
+A point in the plane determines an arrow: the arrow whose tail is at $(0,0)$
+and whose head is at that point.
+An arrow determines a point:
+slide the arrow so that its tail is at $(0,0)$,
+then the point it determines is the position of the head of the arrow.
+Arrows/vectors are things that we can add and scale.
+In Physics and Calculus classes,
+when we want to think of an $xy$-pair as an arrow/vector rather than a point,
+we sometimes write $\langle x,y\rangle$ instead of $(x,y)$.
+
+Instead of doing this, let's just think of $g(3)=(3,9)$ and $df(3) = (1,6)$
+as living in different copies of the $xy$-plane.
+Let's call the one that $df(3)$ lives in $T$ and think of the things in $T$
+as vectors/arrows, things that we can add and scale.
+Let's continue to think of the $g(3)$ as a point and of the $xy$-pairs
+in the plane that $g(3)$ lives in as points/positions that it does not
+make sense to add or scale.
+
+If we slide $T$ over to $g(3)=(3,9)$ we can read off the velocity vector
+of the curve $g(t)$ at that point, it is $(1,6)$.
+We can slide $T$ over to any other point on the curve $g(t)$ and read off
+the velocity vector at that point. As long as we do not rotate or stretch $T$.
 
 
 
