@@ -6,7 +6,9 @@ html {
 body {
   font-size: 1.6rem;
   color: #000033;
-  background-color: #FFFDDB;
+  /*background-image: url("/images/taj-mahal-digital.png");*/
+  /*background-size: cover;*/
+  background-color: #da7b74;
 }
 
 header {
@@ -32,6 +34,7 @@ nav {
 }
 
 nav a {
+  font-family: Futura;
   font-size: 1.8rem;
   font-weight: bold;
   color: red;
@@ -55,6 +58,11 @@ h2 {
   font-size: 2rem;
 }
 
+@font-face {
+  font-family: neoPrisma
+  src: url("/fonts/NeoPrismaRegular.tff");
+}
+
 article .header {
   font-size: 1.4rem;
   font-style: italic;
@@ -65,6 +73,16 @@ article .header {
   font-weight: bold;
   color: #000033;
   text-decoration: none;
+}
+
+h1.neoprisma{
+  font-size: 10rem;
+  font-family: neoPrisma;
+}
+
+.cooltitle a {
+  font-size: 2.4rem;
+  font-family: neoPrisma;
 }
 
 @media (max-width: 319px) {
@@ -103,7 +121,7 @@ article .header {
     padding: 0 5%;
   }
   header {
-    margin: 4.2rem 0;
+    margin: 5.2rem 0;
   }
   nav {
     margin: 0 auto 3rem;
