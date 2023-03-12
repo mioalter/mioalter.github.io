@@ -61,6 +61,8 @@ h2 {
 @font-face {
   font-family: neoPrisma
   src: url("/fonts/NeoPrismaRegular.tff");
+  src: url("/fonts/NeoPrismaRegular.woff");
+  src: url("/fonts/NeoPrismaRegular.woff2");
 }
 
 article .header {
