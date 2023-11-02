@@ -40,8 +40,8 @@ It is _not_, however, a _ring_ homomorphism:
 
 and these are not.
 
-All is not lost! To quote [The Great Spicoli][SPICOLI]:
-we can fix it.
+But all is not lost!
+To quote [The Great Spicoli][SPICOLI]: we can fix it.
 We can define a new multiplicative structure with respect to which $R$
 _is_ a ring homorphism. But we need something first.
 
@@ -55,16 +55,16 @@ which means that $R'$ is the multplicative inverse of $R$ in $\Z/N\Z$.
 We can find $N'$ and $R'$ using the [extended Euclidean algorithm][EEA].
 Having said that "there exists an $R'$", let's suppose we have found one.
 That's all we need right now:
-an $R'$ which is the multiplicative inverse of $R \mod N$.
+an $R'$ which is the multiplicative inverse of $R \mod N$[0].
 
 Now, let's define a new multiplicative structure.
 To avoid confusion, let's write $\SQ(N)$ for $\Z/N\Z$ with its standard addition
-and multiplication[0].
+and multiplication[1].
 Let's write $\M(N)$ for the _Montgomery ring_ of integers mod $N$:
 $\M(N)$ has the same underlying set and additive structure, but we'll define
 the product of elements $[a]$ and $[b]$ to be $[abR']$.
 
-This trick doesn't work in genereral! But it does here[1].
+This trick doesn't work in genereral! But it does here[2].
 
 With this multiplicative structure, $R:\SQ(N) \to \M(N)$
 is a ring homomorphism:
@@ -190,13 +190,17 @@ How often do we have to recompute these things i.e. how often do $P$, $g$, $a$, 
 
 ### Notes
 
-[0] The notation $\SQ(N)$ and $\M(N)$ is not at all standard and the choice of font
+[0] The integers $N'$ and $R'$ are not unique, but $R'$ is unique mod $N$:
+we can change $R'$ by adding a multiple of $N$, then also change $N'$
+by subtracting the corresponding multiple of $R$.
+
+[1] The notation $\SQ(N)$ and $\M(N)$ is not at all standard and the choice of font
 is frivolous: it just felt like a let down to start with $\Z/N\Z$ and then
 drop the black board bold font and start writing $SQ(N)$ and $M(N)$.
 Also, $\M(N)$ clearly depends on $R$ and $R'$, too, but they are not included
 in the notation.
 
-[1] Multiplication has to be associative:
+[2] Multiplication has to be associative:
 if $s,t,u$ are elements of an arbitrary ring, multiplication must satsify
 $(st)u = s(tu)$.
 With our definition of multiplication in $\M(N)$, we have
