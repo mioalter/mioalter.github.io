@@ -204,10 +204,23 @@ With our definition of multiplication in $\M(N)$, we have
 * $([a][b])[c] = [abR'][c] = [abR'cR']$
 * $[a]([b][c]) = [a][bcR'] = [abcR'R']$
 
-Multiplication in general need not be commutative—$st = ts$—but in $\Z/N\Z$ it is:
-multiplication of integers is commutative so (standard) multiplication of integers
+Multiplication in general need not be commutative—$st \neq ts$—but in $\Z/N\Z$ it is:
+multiplication of integers is commutative so multiplication of integers
 mod $N$ is commutative. This implies that $[abR'cR'] = [abcR'R']$
 which means that our new definition of multiplication is associative as required.
+
+### Thanks / More
+
+Thanks to [Dan Pittman](https://types.pl/@pittma@tilde.zone) for turning me onto this topic!
+He encountered this in the wild and [actually fixed some bugs](https://tilde.zone/@pittma/111269760709591730).
+
+If this algebra stuff seems cool / useful and you don't already know it
+
+* You can find copies of [Dummit and Foote](https://www.amazon.com/Abstract-Algebra-3rd-David-Dummit/dp/0471433349)
+floating around the internet.
+* [Harvard's entire Abstract Algebra course](https://www.youtube.com/playlist?list=PLzVTusWerVcIzewg9dQxOKl9_62kTgOgI),
+taught by Benedict Gross, is free on the internet, too.
+* That course uses Artin's Algebra book which you can also find copies of on the internet.
 
 ### References
 
