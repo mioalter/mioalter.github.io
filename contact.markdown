@@ -2,7 +2,7 @@
 title: Contact
 ---
 
-* firstnamelastname at gmail
-* [twitter](https://twitter.com/mioalter)
-* [github](https://github.com/mioalter)
-* [linkedin](https://www.linkedin.com/in/mioalter)
+* `io` at `maltercation.dev` (note: not `mio@`)
+* [`@maltercation`](https://types.pl/@maltercation) on mastondon
+* [`mioalter`](https://github.com/mioalter) on github
+* [`mioalter`](https://www.linkedin.com/in/mioalter) on linkedin
