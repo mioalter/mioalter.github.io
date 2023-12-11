@@ -59,6 +59,7 @@ h2 {
 @font-face {
   font-family: 'NeoPrisma';
   src:
+    local('NeoPrisma'),
     url('/fonts/NeoPrismaRegular.ttf') format('truetype'),
     url('/fonts/NeoPrismaRegular.woff') format('woff'),
     url('/fonts/NeoPrismaRegular.woff2') format('woff2');
