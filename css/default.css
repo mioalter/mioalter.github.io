@@ -57,7 +57,7 @@ h2 {
 }
 
 @font-face {
-  font-family: 'NeoPrisma';
+  font-family: NeoPrisma, sans-serif;
   src:
     local('NeoPrisma'),
     url('/fonts/NeoPrismaRegular.ttf') format('truetype'),
@@ -66,7 +66,7 @@ h2 {
 }
 h1.neoprisma{
   font-size: 10rem;
-  font-family: 'NeoPrisma';
+  font-family: NeoPrisma;
 }
 .cooltitle a {
   font-size: 2.4rem;
