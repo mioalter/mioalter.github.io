@@ -1,3 +1,6 @@
+git checkout develop
+git pull
+git checkout master
 git checkout develop -- _site/
 cp _site/about.html about.html
 cp _site/archive.html archive.html
