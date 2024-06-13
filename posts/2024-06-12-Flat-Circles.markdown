@@ -111,7 +111,8 @@ of velocity vectors so is a second derivative.
 This is the Gaussian, first half of the 19th-century, description of curvature
 of curves and surfaces embedded in $\R^3$.
 
-What we'll see next is the modern, Riemannian, description of curvature.
+What we'll see next is the modern, Riemannian, description of curvature
+which generalizes the Gaussian view to higher-dimensional, non-Euclidean, spaces.
 
 # Non-Euclidean spaces
 
