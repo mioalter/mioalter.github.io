@@ -1,5 +1,5 @@
 ---
-title: A Couple of Flat Circles OR What Even Is Curvature?
+title: A Couple of Flat Circles
 ---
 \newcommand{\R}{\mathbb R}
 
@@ -7,27 +7,28 @@ I was listening to [a podcast][money stuff] recently and one of the hosts said
 "time is a flat circle." Only tangentially—pun intended!—related to the meaning
 of that phrase, I started thinking about two different descriptions of the [torus][torus]
 (which is a pair of circles): one flat, one not.
-This is a post to describe those two ways of viewing a torus.
+This post will describe those two ways of viewing the torus.
 
-This is, in fact, a very brief introduction to non-Euclidean geometry.
+The real point, though, is to answer the question: what does it even mean for a
+non-Euclidean space to be flat or not flat?
+So really, this a brief introduction to non-Euclidean geometry.
+ 
 The punchline about the tori will come at the end once we set everything up.
-I will try very hard to focus on intuition and leave out as many details as possible;
-I'll freely include links to wikipedia and textbooks instead.
+I'm very intentionally keeping this light on details and heavy on intuition.
+I'll freely include links to wikipedia and textbooks for anyone interested in going deeper.
 My hope is that anyone with vague memories of calculus will be able to enjoy this.
-I'd like this, as much as a written blog post can be, to be like
-we are walking down the street talking and I am wildly gesticulating with my hands,
-rather than a lesson in front of a board.
 I'll use mathematical notation very sparingly and will include few-to-no pictures,
-but drawing pictures is extremely helpful here and the linked references all have great ones.
+but only because I am lazy.
+Drawing pictures is extremely helpful here and the linked references have some great ones.
 
 # Euclidean spaces
 
-We'll write $\R$ (pronounced "R") for the [(real) number line][reals] and refer to numbers
+We'll write $\R$ (pronounced "R") for the [real number line][reals] and refer to numbers
 on the number line as "real numbers."
 
-For $n = 1, 2, 3, \ldots$, $\R^n$ for the set of all $n$-tuples of real numbers.
-So the xy-plane of high school geometry is $\R^2$ (pronounced "R2") and the 3-dimensional
-xyz-space of calculus class is $\R^3$ (pronounced "R3").
+For $n = 1, 2, 3, \ldots$, we'll write $\R^n$ for the set of all $n$-tuples of real numbers.
+So the xy-plane of high school geometry is $\R^2$ (pronounced "R-2") and the 3-dimensional
+xyz-space of calculus class is $\R^3$ (pronounced "R-3").
 
 The set $\R^n$ along with all of the [familiar structure we are accustomed to][euclidean]—
 we can measure distances between points, say when sequences converge, etc.—
@@ -45,48 +46,72 @@ or some combination of these.
 
 For everything that follows, $n$ will be $2$, $3$, or $4$.
 
-# Tangent vectors and tangent spaces
+# Tangent vectors
 
-Suppose we have a particle moving around in $3$-dimensional xyz-space and we have
-a function $\alpha(t)$ ("alpha of $t$") that gives its position as a function of time.
-So $\alpha$ is really a triple of functions $(x(t), y(t), z(t))$ that give the x, y, and z
-coordinates of our particle as functions of time that traces out a curve in xyz-space.
+Suppose we have a curve $\alpha(t)$ ("alpha of t") in $3$-dimensional xyz-space,
+that is, not only the path traced out by a particle moving in space,
+but it's position as a function of time.
+So $\alpha(t)$ is really a triple of functions $(x(t), y(t), z(t))$ that give the
+x, y, and z coordinates of our particle as functions of time.
 
-The derivative of $\alpha$, $\alpha'(t)$, is another function of time:
-it tells us the velocity of our particle.
-The velocity is a vector so has a magnitude and a direction.
-(When to think of something in xyz-space as a point and when to think of it as a vector
-is pretty confusing. We'll get to this shortly.)
+The derivative $\alpha'(t)$ ("alpha prime of t") is the [tangent vector][tangent vector]
+to our curve. It is the velocity as a function of time.
 
-Let's make an extra assumption: let's suppose that are particle is moving at constant
-speed: the magnitude of its velocity vector, $\vert \alpha'(t)\vert$ is always $1$,
-say, even if its direction may be changing.
+# Tangent spaces
 
-If our particle's velocity vector is not changing—both its magnitude and direction
-are constant—then it is moving in a straight line.
-If our velocity vector *is* changing, then its direction is changing since we said
-the magnitude was constant. In this case, our particle is curving.
+Something extremely confusing happens in most calculus classes:
+we write a curve in $\R^3$ as $\alpha(t) = (x(t), y(t), z(t))$,
+we write its derivative as $\alpha'(t) = \langle x'(t), y'(t), z'(t) \rangle$
+(pointedly using angle brackets instead of parentheses), and go to great lenghts
+to emphasize that the velocity $\alpha'(t)$ is a vector—a thing with
+a magnitude and a direction that we can freely move around as long as we don't
+change its magnitude or direction—whereas the position $\alpha(t)$ is not.
+All fine so far: there is nothing so strange about position and velocity being
+not exactly the same type of thing.
+But then we throw a wrench in it by calling $\alpha(t)$ a _vector_-valued function
+which implies that positions are vectors, too, which we said they are not.
 
-The curvature of $\alpha$ at time $t$ is $\vert \alpha''(t)\vert$,
-the magnitude of the derivative of the velocity vector:
-the rate at which the direction of the velocity vector is changing.
-Another way to say this is: the curvature at a point $p$ on our curve $\alpha$
-tells us how quickly velocity vectors at nearby points are pulling away from the velocity vector at $p$.
+What is going on?
 
-Simiarily, but more briefly, if we have a surface in $3$-space described
-("parameterized") by a function $\alpha(u,v)$, and a point $p$ on that surface,
-then we can talk about the plane of velocity vectors—the velocity vectors of all curves in our surface
-that pass through $p$—and measure how quickly the planes at nearby points are pulling away
-from the plane at $p$. This is, intuitively, the curvature of a surface in $3$-space.
+Well, there are really many different copies of $3$-dimensional space:
+there is the space of positions and, at each position, a space of all possible
+tangent vectors. So there is the $\R^3$ that $\alpha(t)$ lives in and, at every
+point in that $\R^3$, another $\R^3$ of the tangent vectors to all curves that pass
+through that point.
+It just happens that we have a standard way to think of all of these different
+$\R^3$s as a single $\R^3$, so we do that, except for the parentheses vs. angle brackets thing,
+and it ends up being very confusing.
 
-So, velocity vectors (and planes of velocity vectors) are first derivatives;
-rates of change of velocity vectors are second derivatives.
-Curvature is a second derivative.
+The 20th century way to say this is: there is the space $\R^3$ and,
+at each point $p$ in that space, there is the space of tangent vectors $T_p\R^3$
+("T-P-R-3") which is another $\R^3$.
+A space along with the spaces of tangent vectors at every point is called the
+[_tangent bundle_][tangent bundle]. So really, calculus in $\R^3$ is the geometry/physics/dynamics
+of the tangent bundle to $\R^3$.
 
+# Curvature is a second derivative
 
-# Curavture is a second derivative
+The second derivative $\alpha''(t)$ is a vector that tells us how our velocity
+vector is changing, its magnitude $\vert \alpha''(t)\vert$ tells us how quickly
+our velocity is changing, ignoring the direction of change.
 
+If the magnitude and direction of our velocity vector are constant, then we are moving
+in a straight line and $\vert \alpha''(t)\vert = 0$ .
+If our velocity vector is changing,
+then our curve is curving and $\vert\alpha''(t)\vert\neq 0$.
 
+So $\vert \alpha''(t)\vert$ (suitably normalized) is the [curvature of our curve][curvature].
+
+Similarly, but more briefly, if we have a surface in $\R^3$ described ("parameterized")
+by a function $\alpha(u,v) = (x(u,v), y(u,v), z(u,v))$,
+then we can measure how quickly the tangent plane any point on our surface is changing
+as we move along the surface in any direction. This again measures rates of change
+of velocity vectors so is a second derivative.
+
+This is the Gaussian, first half of the 19th-century, description of curvature
+of curves and surfaces embedded in $\R^3$.
+
+What we'll see next is the modern, Riemannian, description of curvature.
 
 # Non-Euclidean spaces
 
@@ -98,7 +123,10 @@ Curvature is a second derivative.
 
 # Flat and non-flat Tori
 
+[curvature]: https://en.wikipedia.org/wiki/Curvature
 [euclidean]: https://en.wikipedia.org/wiki/Euclidean_space
 [money stuff]: https://www.bloomberg.com/podcasts/series/money-stuff
 [reals]: https://en.wikipedia.org/wiki/Real_number
+[tangent bundle]: https://en.wikipedia.org/wiki/Tangent_bundle
+[tangent vector]: https://en.wikipedia.org/wiki/Tangent_vector
 [torus]: https://en.wikipedia.org/wiki/Torus

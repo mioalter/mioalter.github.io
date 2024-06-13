@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../css/default.css" />
+    </head>
+    <body>
+        <header>
+            <nav>
+                <a href="../">Home</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Posts</a>
+            </nav>
+        </header>
+
+        <main role="main">
+            <article>
+    <section class="header">
+        Posted on June 12, 2024
+        
+    </section>
+    <section>
+        <h1>A Couple of Flat Circles</h1>
+        <p>I was listening to <a href="https://www.bloomberg.com/podcasts/series/money-stuff">a podcast</a> recently and one of the hosts said
+“time is a flat circle.” Only tangentially—pun intended!—related to the meaning
+of that phrase, I started thinking about two different descriptions of the <a href="https://en.wikipedia.org/wiki/Torus">torus</a>
+(which is a pair of circles): one flat, one not.
+This post will describe those two ways of viewing the torus.</p>
+<p>The real point, though, is to answer the question: what does it even mean for a
+non-Euclidean space to be flat or not flat?
+So really, this a brief introduction to non-Euclidean geometry.</p>
+<p>The punchline about the tori will come at the end once we set everything up.
+I’m very intentionally keeping this light on details and heavy on intuition.
+I’ll freely include links to wikipedia and textbooks for anyone interested in going deeper.
+My hope is that anyone with vague memories of calculus will be able to enjoy this.
+I’ll use mathematical notation very sparingly and will include few-to-no pictures,
+but only because I am lazy.
+Drawing pictures is extremely helpful here and the linked references have some great ones.</p>
+<h1 id="euclidean-spaces">Euclidean spaces</h1>
+<p>We’ll write <span class="math inline">ℝ</span> (pronounced “R”) for the <a href="https://en.wikipedia.org/wiki/Real_number">real number line</a> and refer to numbers
+on the number line as “real numbers.”</p>
+<p>For <span class="math inline"><em>n</em> = 1, 2, 3, …</span>, we’ll write <span class="math inline">ℝ<sup><em>n</em></sup></span> for the set of all <span class="math inline"><em>n</em></span>-tuples of real numbers.
+So the xy-plane of high school geometry is <span class="math inline">ℝ<sup>2</sup></span> (pronounced “R-2”) and the 3-dimensional
+xyz-space of calculus class is <span class="math inline">ℝ<sup>3</sup></span> (pronounced “R-3”).</p>
+<p>The set <span class="math inline">ℝ<sup><em>n</em></sup></span> along with all of the <a href="https://en.wikipedia.org/wiki/Euclidean_space">familiar structure we are accustomed to</a>—
+we can measure distances between points, say when sequences converge, etc.—
+is variously called
+“Euclidean space”,
+“Euclidean <span class="math inline"><em>n</em></span>-space”,
+“<span class="math inline"><em>n</em></span>-dimensional Euclidean space”,
+“Euclidean space of dimension <span class="math inline"><em>n</em></span>”,
+“<span class="math inline"><em>n</em></span>-dimensional space”,
+or just “<span class="math inline"><em>n</em></span>-space.”</p>
+<p>When <span class="math inline"><em>n</em></span> is <span class="math inline">2</span>, we usually say “the plane” or the “the xy-plane”;
+when <span class="math inline"><em>n</em></span> is <span class="math inline">3</span>, we usually say “<span class="math inline">3</span>-space”, “<span class="math inline">3</span>-dimensional space”, “xyz-space”
+or some combination of these.</p>
+<p>For everything that follows, <span class="math inline"><em>n</em></span> will be <span class="math inline">2</span>, <span class="math inline">3</span>, or <span class="math inline">4</span>.</p>
+<h1 id="tangent-vectors">Tangent vectors</h1>
+<p>Suppose we have a curve <span class="math inline"><em>α</em>(<em>t</em>)</span> (“alpha of t”) in <span class="math inline">3</span>-dimensional xyz-space,
+that is, not only the path traced out by a particle moving in space,
+but it’s position as a function of time.
+So <span class="math inline"><em>α</em>(<em>t</em>)</span> is really a triple of functions <span class="math inline">(<em>x</em>(<em>t</em>),<em>y</em>(<em>t</em>),<em>z</em>(<em>t</em>))</span> that give the
+x, y, and z coordinates of our particle as functions of time.</p>
+<p>The derivative <span class="math inline"><em>α</em>′(<em>t</em>)</span> (“alpha prime of t”) is the <a href="https://en.wikipedia.org/wiki/Tangent_vector">tangent vector</a>
+to our curve. It is the velocity as a function of time.</p>
+<h1 id="tangent-spaces">Tangent spaces</h1>
+<p>Something extremely confusing happens in most calculus classes:
+we write a curve in <span class="math inline">ℝ<sup>3</sup></span> as <span class="math inline"><em>α</em>(<em>t</em>) = (<em>x</em>(<em>t</em>),<em>y</em>(<em>t</em>),<em>z</em>(<em>t</em>))</span>,
+we write its derivative as <span class="math inline"><em>α</em>′(<em>t</em>) = ⟨<em>x</em>′(<em>t</em>), <em>y</em>′(<em>t</em>), <em>z</em>′(<em>t</em>)⟩</span>
+(pointedly using angle brackets instead of parentheses), and go to great lenghts
+to emphasize that the velocity <span class="math inline"><em>α</em>′(<em>t</em>)</span> is a vector—a thing with
+a magnitude and a direction that we can freely move around as long as we don’t
+change its magnitude or direction—whereas the position <span class="math inline"><em>α</em>(<em>t</em>)</span> is not.
+All fine so far: there is nothing so strange about position and velocity being
+not exactly the same type of thing.
+But then we throw a wrench in it by calling <span class="math inline"><em>α</em>(<em>t</em>)</span> a <em>vector</em>-valued function
+which implies that positions are vectors, too, which we said they are not.</p>
+<p>What is going on?</p>
+<p>Well, there are really many different copies of <span class="math inline">3</span>-dimensional space:
+there is the space of positions and, at each position, a space of all possible
+tangent vectors. So there is the <span class="math inline">ℝ<sup>3</sup></span> that <span class="math inline"><em>α</em>(<em>t</em>)</span> lives in and, at every
+point in that <span class="math inline">ℝ<sup>3</sup></span>, another <span class="math inline">ℝ<sup>3</sup></span> of the tangent vectors to all curves that pass
+through that point.
+It just happens that we have a standard way to think of all of these different
+<span class="math inline">ℝ<sup>3</sup></span>s as a single <span class="math inline">ℝ<sup>3</sup></span>, so we do that, except for the parentheses vs. angle brackets thing,
+and it ends up being very confusing.</p>
+<p>The 20th century way to say this is: there is the space <span class="math inline">ℝ<sup>3</sup></span> and,
+at each point <span class="math inline"><em>p</em></span> in that space, there is the space of tangent vectors <span class="math inline"><em>T</em><sub><em>p</em></sub>ℝ<sup>3</sup></span>
+(“T-P-R-3”) which is another <span class="math inline">ℝ<sup>3</sup></span>.
+A space along with the spaces of tangent vectors at every point is called the
+<a href="https://en.wikipedia.org/wiki/Tangent_bundle"><em>tangent bundle</em></a>. So really, calculus in <span class="math inline">ℝ<sup>3</sup></span> is the geometry/physics/dynamics
+of the tangent bundle to <span class="math inline">ℝ<sup>3</sup></span>.</p>
+<h1 id="curvature-is-a-second-derivative">Curvature is a second derivative</h1>
+<p>The second derivative <span class="math inline"><em>α</em>″(<em>t</em>)</span> is a vector that tells us how our velocity
+vector is changing, its magnitude <span class="math inline">|<em>α</em>″(<em>t</em>)|</span> tells us how quickly
+our velocity is changing, ignoring the direction of change.</p>
+<p>If the magnitude and direction of our velocity vector are constant, then we are moving
+in a straight line and <span class="math inline">|<em>α</em>″(<em>t</em>)| = 0</span> .
+If our velocity vector is changing,
+then our curve is curving and <span class="math inline">|<em>α</em>″(<em>t</em>)| ≠ 0</span>.</p>
+<p>So <span class="math inline">|<em>α</em>″(<em>t</em>)|</span> (suitably normalized) is the <a href="https://en.wikipedia.org/wiki/Curvature">curvature of our curve</a>.</p>
+<p>Similarly, but more briefly, if we have a surface in <span class="math inline">ℝ<sup>3</sup></span> described (“parameterized”)
+by a function <span class="math inline"><em>α</em>(<em>u</em>,<em>v</em>) = (<em>x</em>(<em>u</em>,<em>v</em>),<em>y</em>(<em>u</em>,<em>v</em>),<em>z</em>(<em>u</em>,<em>v</em>))</span>,
+then we can measure how quickly the tangent plane any point on our surface is changing
+as we move along the surface in any direction. This again measures rates of change
+of velocity vectors so is a second derivative.</p>
+<p>This is the Gaussian, first half of the 19th-century, description of curvature
+of curves and surfaces embedded in <span class="math inline">ℝ<sup>3</sup></span>.</p>
+<p>What we’ll see next is the modern, Riemannian, description of curvature.</p>
+<h1 id="non-euclidean-spaces">Non-Euclidean spaces</h1>
+<h1 id="length-is-speed-times-time">Length is speed times time</h1>
+<h1 id="metrics">Metrics</h1>
+<h1 id="curvature-again">Curvature again</h1>
+<h1 id="flat-and-non-flat-tori">Flat and non-flat Tori</h1>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </footer>
+    </body>
+</html>
