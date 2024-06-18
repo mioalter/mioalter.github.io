@@ -104,15 +104,18 @@ So $\vert \alpha''(t)\vert$ (suitably normalized) is the [curvature of our curve
 
 Similarly, but more briefly, if we have a surface in $\R^3$ described ("parameterized")
 by a function $\alpha(u,v) = (x(u,v), y(u,v), z(u,v))$,
-then we can measure how quickly the tangent plane any point on our surface is changing
-as we move along the surface in any direction. This again measures rates of change
-of velocity vectors so is a second derivative.
+then we can measure [how quickly the tangent planes change][gaussian curvature]
+as we move along the surface. This again measures rates of change
+of (planes of) velocity vectors so is a second derivative.
 
-This is the Gaussian, first half of the 19th-century, description of curvature
+This is the Gaussian—first half of the 19th-century—description of curvature
 of curves and surfaces embedded in $\R^3$.
 
 What we'll see next is the modern, Riemannian, description of curvature
 which generalizes the Gaussian view to higher-dimensional, non-Euclidean, spaces.
+
+Gauss' machinery is already not bad! It's enough to prove [why a slice of pizza
+doesn't flop if you fold it][egregium].
 
 # Non-Euclidean spaces
 
@@ -125,6 +128,8 @@ which generalizes the Gaussian view to higher-dimensional, non-Euclidean, spaces
 # Flat and non-flat Tori
 
 [curvature]: https://en.wikipedia.org/wiki/Curvature
+[gaussian curvature]: https://en.wikipedia.org/wiki/Gaussian_curvature#Informal_definition
+[egregium]: https://en.wikipedia.org/wiki/Theorema_Egregium
 [euclidean]: https://en.wikipedia.org/wiki/Euclidean_space
 [money stuff]: https://www.bloomberg.com/podcasts/series/money-stuff
 [reals]: https://en.wikipedia.org/wiki/Real_number
