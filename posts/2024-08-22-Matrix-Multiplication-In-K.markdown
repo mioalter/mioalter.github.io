@@ -5,8 +5,8 @@ Everything in `K` is a vector (or vector of vectors, or vector of vector of vect
 This is short post about matrix multiplication in `K`, in particular, why
 the thing that does matrix multiplication is doing matrix multiplication.
 
-To be clear: I don't know `K`. I do know linear algebra, but this post isn't
-trying to teach you either.
+To be clear: I don't know `K`.
+I do know linear algebra, but this post isn't trying to teach you either.
 
 You can run `K` in your browser:...
 or install it locally (e.g. `brew install kona`).
@@ -39,7 +39,7 @@ and compute their dot product.
 We can give the dot product a name and call it with two arguments.
 
 ```
-  dot: (+/*) // define
+  dot: (+/*)
   dot[v;w]
 32
 ```
@@ -49,7 +49,7 @@ We can use the "left each" operator `\:` to multiply each element of `v` by all 
 ```
   v*\:w      // multiply each element of v by all of w
 (4 5 6       // this produces a vector of vectors
- 8 10 12
+ 8 10 12     // aka a matrix
  12 15 18)
 ```
 
@@ -152,3 +152,11 @@ So this is the definition of matrix multiplication in `K`:
 ```
 matmul: (+/*)\:
 ```
+
+This looked extremely wrong to me when I first saw it: it _looked_ like
+`matmul[A;B]` would compute the dot products of the rows of $A$ with the _rows_ of $B$
+since matrices are vectors of rows and `matmul` is just applying `dot` to
+each row of $A$ and all of $B$.
+I expected to see a matrix transpose in there somewhere.
+It turns out that `dot` in `K` is more general than the dot product in math
+and this absolutely does the right thing.
