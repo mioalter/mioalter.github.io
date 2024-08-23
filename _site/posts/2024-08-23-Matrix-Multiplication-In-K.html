@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../css/default.css" />
+    </head>
+    <body>
+        <header>
+            <nav>
+                <a href="../">Home</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Posts</a>
+            </nav>
+        </header>
+
+        <main role="main">
+            <article>
+    <section class="header">
+        Posted on August 23, 2024
+        
+    </section>
+    <section>
+        <h1>Matrix Multiplication in K</h1>
+        <p><code>K</code> is a language—family of langauges—in the APL family.
+Everything in <code>K</code> is a vector (or vector of vectors, or vector of vector of vectors, …).
+This is a short post about <a href="https://en.wikipedia.org/wiki/Matrix_multiplication">matrix multiplication</a> in <code>K</code>,
+in particular, why the thing that does matrix multiplication is doing matrix multiplication.</p>
+<p>To be clear: I don’t know <code>K</code>. I do know linear algebra.
+But this post will not attempt to teach you either.</p>
+<p>A couple ways to run <code>K</code> are</p>
+<ul>
+<li>in your browser <a href="http://johnearnest.github.io/ok/index.html">like so</a> or <a href="https://ngn.bitbucket.io/k/">like so</a> or</li>
+<li>by <a href="https://github.com/kevinlawler/kona">installing it locally</a>.</li>
+</ul>
+<p>See the references at the end for helpful links.</p>
+<p>First, given a vector <code>v</code>, we can</p>
+<pre><code>  v: 1 2 3   // create a vector v
+  2+v        // add 2 to every element
+3 4 5
+  2*v        // multiply every element by 2
+2 4 6
+  +/v        // fold / sum over v
+6</code></pre>
+<p>The <code>/</code> operator is called “over” so <code>+/v</code> is read “plus over v.”</p>
+<p>Given two vectors <code>v</code> and <code>w</code>, we can add and multiply them element-wise,
+and compute their <a href="https://en.wikipedia.org/wiki/Dot_product">dot product</a>.</p>
+<pre><code>  w: 4 5 6   // create a vector w
+  v+w        // add v and w element-wise
+5 7 9
+  v*w        // multiply them element-wise
+4 10 18
+  +/v*w      // take their dot product
+32</code></pre>
+<p>We can give the dot product a name and call it with two arguments.</p>
+<pre><code>  dot: (+/*)
+  dot[v;w]
+32</code></pre>
+<p>We can use the “left each” operator <code>\:</code> to multiply each element of <code>v</code> by all of <code>w</code></p>
+<pre><code>  v*\:w      // multiply each element of v by all of w
+(4 5 6       // this produces a vector of vectors
+ 8 10 12     // aka a matrix
+ 12 15 18)</code></pre>
+<p>The same thing manually</p>
+<pre><code>  (1*w;2*w;3*w)    // a vector of 3 vectors, all of size 3
+(4 5 6             // aka a 3x3 matrix
+ 8 10 12
+ 12 15 18)</code></pre>
+<p>This is how you define a matrix in <code>K</code>: as a vector of rows.</p>
+<p>Now, for some math.
+If <span class="math inline"><em>A</em></span> is an <span class="math inline"><em>m</em> × <em>n</em></span> matrix—<span class="math inline"><em>m</em></span> rows, <span class="math inline"><em>n</em></span> columns—and <span class="math inline"><em>B</em></span> is an <span class="math inline"><em>n</em> × <em>p</em></span>
+matrix, the product <span class="math inline"><em>A</em><em>B</em></span> is the <span class="math inline"><em>m</em> × <em>p</em></span> matrix whose <span class="math inline">(<em>i</em>,<em>j</em>)<sup><em>t</em><em>h</em></sup></span> element
+is the dot product of the <span class="math inline"><em>i</em><sup><em>t</em><em>h</em></sup></span> row of <span class="math inline"><em>A</em></span> with the <span class="math inline"><em>j</em><sup><em>t</em><em>h</em></sup></span> <em>column</em> of <span class="math inline"><em>B</em></span>.
+In the standard <a href="https://en.wikipedia.org/wiki/Matrix_multiplication_algorithm">imperative impelementation</a> with 3 loops,
+the outer loop iterates over the rows of <span class="math inline"><em>A</em></span>, the second loop iterates over the
+columns of <span class="math inline"><em>B</em></span>, and the inner loop computes the dot product
+by multiplying element-wise and summing.
+Although we know how to compute dot products of vectors in <code>K</code>,
+since matrices are represented as vectors of rows, we cannot easily access
+their columns so this is not how we will implement matrix multiplication.</p>
+<p>We can, however, make an astute observation:
+the <span class="math inline"><em>i</em><sup><em>t</em><em>h</em></sup></span> row of <span class="math inline"><em>A</em><em>B</em></span> is the <span class="math inline"><em>i</em><sup><em>t</em><em>h</em></sup></span> row of <span class="math inline"><em>A</em></span>—viewed
+as a <span class="math inline">1 × <em>n</em></span> matrix—times <span class="math inline"><em>B</em></span>.
+So, if we can figure out how to multiply a single row of <span class="math inline"><em>A</em></span> by all of <span class="math inline"><em>B</em></span>,
+then we can do that for each row and that will give us <span class="math inline"><em>A</em><em>B</em></span>.</p>
+<p>So, can we figure out how to multiply a single row of a matrix by another
+matrix in <code>K</code>-y way? Let’s say that <span class="math inline"><em>A</em></span> and <span class="math inline"><em>B</em></span> are</p>
+<pre><code>  A1: 1 2 3        // the first row of A
+  A2: 4 5 6        // the second row of A
+  :A: (A1;A2)      // A is a 2x3 matrix
+(1 2 3
+ 4 5 6)
+    :B: (10 11 12 13;20 21 22 23;30 31 32 33)
+(10 11 12 13       // B is a 3x4 matrix
+ 20 21 22 23
+ 30 31 32 33)</code></pre>
+<p>Note: the leading <code>:</code> in <code>:A:</code> is to make the REPL display
+the value of the assignment <code>A:</code>.</p>
+<p>What do we do to mulitply the first row of <span class="math inline"><em>A</em></span> by all of <span class="math inline"><em>B</em></span>?
+First, we mutiply the first row of <span class="math inline"><em>B</em></span> by the first element of <span class="math inline"><em>A</em>1</span>,
+the second row of <span class="math inline"><em>B</em></span> by the second element of <span class="math inline"><em>A</em>1</span>, and so on</p>
+<pre><code>  A1*B
+(10 11 12 13
+ 40 42 44 46
+ 90 93 96 99)</code></pre>
+<p>then we add the rows element-wise</p>
+<pre><code>  +/A1*B
+140 146 152 158</code></pre>
+<p>These numbers really are the dot products of <code>A1</code> with the columns of <code>B</code></p>
+<pre><code>  dot[A1;10 20 30]
+140
+  dot[A1;11 21 31]
+146
+  dot[A1;12 22 32]
+152
+  dot[A1;13 23 33]
+158</code></pre>
+<p>But, wait: <code>(+/*)</code> is <code>dot</code></p>
+<pre><code>  dot[A1;B]
+140 146 152 158</code></pre>
+<p>So, <code>dot</code> is actually more general than the dot product in linear algebra:
+not only does it compute dot products of vectors, it also computes
+the matrix product of a row vector—<span class="math inline">1 × <em>n</em></span> matrix—and a matrix.</p>
+<p>So now, to compute the entire product <span class="math inline"><em>A</em><em>B</em></span>, we want to do this for every row of <span class="math inline"><em>A</em></span>
+and all of <span class="math inline"><em>B</em></span>.</p>
+<pre><code>  (dot[A1;B];dot[A2;B])
+(140 146 152 158
+ 320 335 350 365)</code></pre>
+<p>We can write this more succinctly using the “left each” operator <code>\:</code></p>
+<pre><code>  A(+/*)\:B
+(140 146 152 158
+ 320 335 350 365)</code></pre>
+<p>or</p>
+<pre><code>  matmul: (+/*)\:
+  matmul[A;B]
+(140 146 152 158
+ 320 335 350 365)</code></pre>
+<p>And that is matrix multiplication in <code>K</code>.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>The impetus for writing this post was that this looked extremely wrong to me when
+I first saw it:
+it <em>looked</em> like <code>matmul[A;B]</code> would compute the dot products of the rows of <span class="math inline"><em>A</em></span>
+with the <em>rows</em> of <span class="math inline"><em>B</em></span> since matrices are vectors of rows and <code>matmul</code> is just doing
+something with dot products. I expected to see a matrix transpose in there somewhere.
+It turns out that <code>dot</code> in <code>K</code> is <em>not</em> just the dot product of vectors,
+it includes a hefty chunk of matrix multiplication.
+Figuring out what <code>matmul</code> is doing and why it works gave me a new way to think
+about matrix multiplication.</p>
+<p>Mind expanded. I hope you feel the same.</p>
+<h1 id="references">References</h1>
+<p>Here are some things I looked at to figure this out</p>
+<ul>
+<li><a href="https://xpqz.github.io/kbook/Introduction.html#">What about k?</a></li>
+<li>The short article <a href="http://archive.vector.org.uk/art10010830">“K” by Arthur Whitney</a></li>
+<li>This <a href="https://razetime.github.io/ngn-k-tutorial/">tutorial</a></li>
+<li>This <a href="https://github.com/JohnEarnest/ok/blob/gh-pages/docs/Manual.md">other tutorial</a></li>
+</ul>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </footer>
+    </body>
+</html>
