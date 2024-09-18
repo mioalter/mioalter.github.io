@@ -2,13 +2,21 @@
 title: Matrix Multiplication in K
 ---
 
-`K` is a language—family of langauges—in the APL family.
+`K` is a language in the APL family.
 Everything in `K` is a vector (or vector of vectors, or vector of vector of vectors, ...).
 This is a short post about [matrix multiplication][matrix-multiplication] in `K`,
 in particular, why the thing that does matrix multiplication is doing matrix multiplication.
 
 To be clear: I don't know `K`. I do know linear algebra.
 But this post will not attempt to teach you either.
+
+The impetus for writing this is: when I first saw how to do matrix multiplication in `K`,
+it looked very wrong. In `K`, a matrix is a vector of rows and, it _looked_ like the
+thing that claimed to compute the product of a pair of matrices `A` and `B` in `K`
+would compute the dot products of the rows of `A` with the _rows_ of `B`;
+what it _should_ do is compute the dot products of the rows of `A` with the _columns_ of `B`.
+So, the point of this post is to explain why the thing that claims to
+do matrix multiplication in `K`, really _is_ doing matrix multiplication.
 
 A couple ways to run `K` are
 
@@ -179,17 +187,14 @@ or
 And that is matrix multiplication in `K`.
 
 # Conclusion
-The impetus for writing this post was that this looked extremely wrong to me when
-I first saw it:
-it _looked_ like `matmul[A;B]` would compute the dot products of the rows of $A$
-with the _rows_ of $B$ since matrices are vectors of rows and `matmul` is just doing
-something with dot products. I expected to see a matrix transpose in there somewhere.
+When I first saw `matmul`, it _looked_ like `matmul[A;B]` would compute the dot
+products of the rows of $A$ with the _rows_ of $B$ since matrices are vectors of
+rows and `matmul` is just doing something with dot products.
+I expected to see a matrix transpose in there somewhere.
 It turns out that `dot` in `K` is _not_ just the dot product of vectors,
 it includes a hefty chunk of matrix multiplication.
 Figuring out what `matmul` is doing and why it works gave me a new way to think
-about matrix multiplication.
-
-Mind expanded. I hope you feel the same.
+about matrix multiplication. Mind expanded. I hope you feel the same.
 
 # References
 Here are some things I looked at to figure this out

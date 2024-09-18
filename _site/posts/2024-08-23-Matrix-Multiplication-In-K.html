@@ -23,12 +23,19 @@
     </section>
     <section>
         <h1>Matrix Multiplication in K</h1>
-        <p><code>K</code> is a language—family of langauges—in the APL family.
+        <p><code>K</code> is a language in the APL family.
 Everything in <code>K</code> is a vector (or vector of vectors, or vector of vector of vectors, …).
 This is a short post about <a href="https://en.wikipedia.org/wiki/Matrix_multiplication">matrix multiplication</a> in <code>K</code>,
 in particular, why the thing that does matrix multiplication is doing matrix multiplication.</p>
 <p>To be clear: I don’t know <code>K</code>. I do know linear algebra.
 But this post will not attempt to teach you either.</p>
+<p>The impetus for writing this is: when I first saw how to do matrix multiplication in <code>K</code>,
+it looked very wrong. In <code>K</code>, a matrix is a vector of rows and, it <em>looked</em> like the
+thing that claimed to compute the product of a pair of matrices <code>A</code> and <code>B</code> in <code>K</code>
+would compute the dot products of the rows of <code>A</code> with the <em>rows</em> of <code>B</code>;
+what it <em>should</em> do is compute the dot products of the rows of <code>A</code> with the <em>columns</em> of <code>B</code>.
+So, the point of this post is to explain why the thing that claims to
+do matrix multiplication in <code>K</code>, really <em>is</em> doing matrix multiplication.</p>
 <p>A couple ways to run <code>K</code> are</p>
 <ul>
 <li>in your browser <a href="http://johnearnest.github.io/ok/index.html">like so</a> or <a href="https://ngn.bitbucket.io/k/">like so</a> or</li>
@@ -138,16 +145,14 @@ and all of <span class="math inline"><em>B</em></span>.</p>
  320 335 350 365)</code></pre>
 <p>And that is matrix multiplication in <code>K</code>.</p>
 <h1 id="conclusion">Conclusion</h1>
-<p>The impetus for writing this post was that this looked extremely wrong to me when
-I first saw it:
-it <em>looked</em> like <code>matmul[A;B]</code> would compute the dot products of the rows of <span class="math inline"><em>A</em></span>
-with the <em>rows</em> of <span class="math inline"><em>B</em></span> since matrices are vectors of rows and <code>matmul</code> is just doing
-something with dot products. I expected to see a matrix transpose in there somewhere.
+<p>When I first saw <code>matmul</code>, it <em>looked</em> like <code>matmul[A;B]</code> would compute the dot
+products of the rows of <span class="math inline"><em>A</em></span> with the <em>rows</em> of <span class="math inline"><em>B</em></span> since matrices are vectors of
+rows and <code>matmul</code> is just doing something with dot products.
+I expected to see a matrix transpose in there somewhere.
 It turns out that <code>dot</code> in <code>K</code> is <em>not</em> just the dot product of vectors,
 it includes a hefty chunk of matrix multiplication.
 Figuring out what <code>matmul</code> is doing and why it works gave me a new way to think
-about matrix multiplication.</p>
-<p>Mind expanded. I hope you feel the same.</p>
+about matrix multiplication. Mind expanded. I hope you feel the same.</p>
 <h1 id="references">References</h1>
 <p>Here are some things I looked at to figure this out</p>
 <ul>
