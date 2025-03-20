@@ -1,0 +1,254 @@
+---
+title: Never Mess Up Another Integral With This One Weird Trick!
+---
+\newcommand{\R}{\mathbb R}
+\newcommand{\Su}{\partial S / \partial u}
+\newcommand{\Sv}{\partial S / \partial v}
+
+A host on a podcast I was listening to used the phrase "time is a flat circle"
+which got me to thinking about the flat vs. non-flat torus—a circle of circles.
+I considered writing about those, but going from zero to Curvature in one post
+felt like too much.
+
+Around the same time, I read a blog post about spherical coordinates in
+computer graphics which reminded me of an old gripe I have with multi-variable
+calculus: that there are too many different ways of doing pretty much the same
+things e.g. computing surface areas and volumes
+or formulae that say that the integral of one thing over a region is equal to
+the integral of a related thing over the boundary of that region.
+Doing just a tiny bit of theoretical setup first, makes all of this much simpler.
+
+This post is a teaser to illustrate how much simpler things get using
+examples that should be familiar to anyone with vague memories of
+calculus: computing the surface area of a sphere and the volume of a ball.
+
+This post makes no claim to be related to computers, but it does illustrate
+a standard idea in software:
+the importance of using the right abstractions.
+
+In a feat of Hurculean restraint, I did my best to name some dots and connect
+those dots without going to great lengths to explain the dots.
+As I said, this is a teaser, not a lecture.
+I think, and hope, that in this case, less is more.
+There are ample links and references that I hope the interested reader
+will pursue.
+
+This is not stuff I think about every day—or haven't for a long time—and
+thinking about how to present this has made for some enjoyable dog-walking
+conversations (with myself).
+
+
+# The Sphere
+
+Let's say we want to compute the surface area of a sphere of radius $R > 0$,
+the set of points in $3$-dimensional xyz-space whose coordinates satisify
+$x^2 + y^2 +z^2 = R^2$.
+
+Let's denote it by $S_R$. We can parameterize $S_R$ with the function
+
+$$S(u,v) = (R\cos(u) \sin (v), R\sin (u) \sin (v), R\cos (v))$$
+
+where $0 \leq u < 2\pi$ and $0 \leq v < \pi$.
+
+At a generic point $(u,v)$,
+the partial derivatives $\partial S / \partial u$ and
+$\partial S/\partial v$ are vectors in xyz-space.
+Let's abbreviate them as $S_u$ and $S_v$, respectively.
+
+Now, let's write down a $2\times 2$ matrix whose entries are the dot products
+of these vectors with themselves and each other
+
+$$g(u,v) = \begin{pmatrix}
+S_u \cdot S_u & S_u \cdot S_v \\
+S_v \cdot S_u & S_v \cdot S_v
+\end{pmatrix}
+=\begin{pmatrix}
+R^2\sin^2(v) & 0 \\
+0 & R^2
+\end{pmatrix}$$
+
+Computing these dot products invovles a little algebra and the trig identity
+$\cos^2 + \sin^2 = 1$.
+
+So $g(u,v)$ is really a function that, to each point $(u,v)$,
+assigns a $2\times 2$ matrix. The [determinant][determinant] of this matrix
+
+$$\det(g(u,v)) = R^4\sin^2(v)$$
+
+is an ordinary function on uv-space.
+
+We can now compute the surface area of the sphere as
+
+$$\int_{S_R}dA
+= \int_0^{\pi}\int_0^{2\pi}\sqrt{\det(g(u,v))} dudv
+=  \int_0^{\pi}\int_0^{2\pi} R^2\sin(v) du dv$$
+
+which is the standard integral to compute the surface area of the sphere
+of radius $R$;
+it evaluates to $4\pi R^2$ as expected.
+
+# The Ball
+
+Now let's say we want to compute the volume of the entire ball of radius $R$,
+the points whose coordinates satisfy $x^2 + y^2 + z^2 \leq R$.
+
+Let's denote the ball by $B_R$. We can parameterize $B_R$ by
+
+$$T(r, u,v) = (r\cos(u) \sin (v), r\sin (u) \sin (v), r\cos (v))$$
+
+where $0 \leq r \leq R$, $0\leq u < 2\pi$, and $0 \leq v < \pi$.
+
+The partial derivatives $\partial T / \partial r$,
+$\partial T / \partial u$, and
+$\partial T / \partial v$ are again vectors in xyz-space,
+and we can now write down a $3 \times 3$ matrix whose entries
+are the dot products of these vectors with themselves and each other
+
+$$g(r, u,v) =
+\begin{pmatrix}
+T_r \cdot T_r & T_r\cdot T_u & T_r\cdot T_v \\
+T_u\cdot T_r & T_u\cdot T_u & T_u\cdot T_v \\
+T_v\cdot T_r & T_v\cdot T_u & T_v\cdot T_v
+\end{pmatrix}
+=\begin{pmatrix}
+1 & 0 & 0 \\
+0 & r^2\sin^2(v) & 0 \\
+0 & 0 & r^2
+\end{pmatrix}$$
+
+using the same shorthand $T_r$ for $\partial T / \partial r$, and similarly
+for $T_u$ and $T_v$.
+
+The determinant of this matrix is
+
+$$\det(g(r,u,v)) = r^4\sin^2(v)$$
+
+and we can now compute the volume of the ball as
+
+$$\int_{B_R} dV
+= \int_0^{\pi}\int_{0}^{2\pi}\int_{0}^{R} \sqrt{\det(g(r,u,v))} dr du dv
+= \int_0^{\pi}\int_{0}^{2\pi}\int_{0}^{R} r^2\sin(v) dr du dv
+$$
+
+This is the standard integral to compute the volume of the ball of radius $R$;
+it evaluates to $4\pi R^3 / 3$ as expected.
+
+# Jacobians
+
+Here is one last observation to tie things together.
+
+Let's write $dS$ for the Jacobian (or "differential) of $S$,
+the matrix whose columns are the partial derivative vectors $S_u$ and $S_v$.
+So $dS$ is a $3 \times 2$ matrix: it is has $2$ columns each of which
+is a $3$-dimensional vector. Its transpose $(dS)^t$ is the $2\times 3$ 
+matrix whose _rows_ are the vectors $S_u$ and $S_v$.
+
+We can write our matrix $g$ in terms of these as
+
+$$g(u,v) = (dS)^t dS$$
+
+because that's what a matrix product is:
+the matrix product $AB$ is the matrix whose entries are the rows of $A$
+dotted with the columns of $B$.
+In this case, the rows of $(dS)^t$ and the columns of $dS$ are both
+the vectors $S_u$ and $S_v$ so this matrix product is the dot products of
+these vectors with themselves and each other.
+
+The determinant is only defined for square matrices so we cannot take
+the determinant of $dS$, but we can take the determinant of $g$.
+
+Similarly, in the case of the ball, we can write
+
+$$g(r,u,v) = (dT)^t dT$$
+
+where $dT$ is the Jacobian of $T$ and $(dT)^t$ is its transpose.
+Using some [nice properties of the determinant][determinant properties],
+we see that
+
+$$\det(g) = \det((dT)^t dt) = \det((dT)^t)\det(dT) = (\det(dT))^2$$
+
+Hopefully this demystifies our volume integral.
+
+# Synthesis
+
+Clearly these are not the standard ways to define these integrals even though
+we end up with the same thing: in the standard definition of surface area,
+we integrate the magnitude of the cross product $|S_u \times S_v|$ and in the
+standard definition of volume, we integrate the determinant of the Jacobian
+matrix $dT$
+though in this case we've seen that $\sqrt{\det(g)} = \det(dT)$.
+
+The intuition is unchanged, though: if we can parameterize a curved space
+using rectilinear ("Euclidean") coordinates, then we can measure things
+on the curved space by integrating over rectlinear space,
+we just have to keep track of how rectlinear space gets stretched
+or compressed when it gets mapped onto our curved space.
+
+There are several advantages to this approach.
+First, it works for spaces of any dimension, that is,
+which can be parameterized by any number of coordinates, not just $2$ or $3$.
+Second, although we have appealed to the larger xyz-space that the sphere
+and ball live in in these examples, this approach works without having
+a larger ambient space to appeal to.
+
+So this "assign a square matrix to every point and integrate
+some function (e.g. the determinant) of that matrix to measure things"
+approach is how you measure things on curved spaces, of any dimension,
+whether or not they come to you embedded in a larger coordinate space,
+that is, it is how you measure things in non-Euclidean geometry.
+
+The two examples we've done are to
+compute the $n$-dimension volume of an $n$-dimensional curved space
+where $n$ is $2$ and $3$, respectively.
+Mercifully, there is one way to do this that works in all dimensions,
+we don't need to figure out a new way to do the same thing every time.
+
+# In The World
+
+This is where we point to a lot of things without explaining much.
+
+In the case of the sphere, Gauss (in the 1820s) called $g$
+the [first fundamental form][first fundamental form].
+
+In modern parlance, we would call $g$ (for a space of any dimension)
+the [metric (tensor)][metric].
+In these examples, since we appealed to the ambient xyz-space,
+the $g$ we defined is the ["induced metric"][induced metric], the metric
+induced by the larger xyz-space in which we are embedded, but, as we said,
+having that larger space is not a requirement.
+
+A [non-Euclidean space][manifold] is one that is locally
+[Euclidean][Euclidean space], meaning,
+it is covered by patches that can be parameterized by rectilinear / Euclidean
+coordinates.
+At each point, there is a tangent space—the space of velocity vectors of curves
+through that point—and the matrix $g$ at that point is a dot product on
+that space of tangent vectors.
+So, to really understand everything that is going on here,
+we need to understand the basics of the theory of
+vector spaces—linear algebra—and the basic mechanics of
+(differentiable) non-Euclidean spaces—[differentiable manifolds][differentiable manifold].
+See the next section for some fantastic references.
+
+If you open a textbook on [Gravitation / General Relativity][gravitation],
+it will start with a statement that goes something like
+"Spacetime is a manifold $M$ along with a metric $g$.
+Gravity is the curvature of this metric."
+So, that's what $g$ is in Physics.
+
+# References
+
+* The unified version of the various
+"the integral of one thing over a region is equal to the integral of a related
+thing over the boundary of that region" formulae is [Stokes' Theorem][stokes]
+
+[determinant]: https://en.m.wikipedia.org/wiki/Determinant
+[determinant properties]: https://en.wikipedia.org/wiki/Determinant#Transpose
+[differentiable manifold]: https://en.wikipedia.org/wiki/Differentiable_manifold
+[Euclidean space]: https://en.wikipedia.org/wiki/Euclidean_space
+[first fundamental form]: https://en.wikipedia.org/wiki/First_fundamental_form
+[gravitation]: https://en.wikipedia.org/wiki/Gravitation_(book)
+[induced metric]: https://en.wikipedia.org/wiki/Metric_tensor#Induced_metric
+[manifold]: https://en.wikipedia.org/wiki/Manifold
+[metric]: https://en.wikipedia.org/wiki/Metric_tensor
+[stokes]: https://en.wikipedia.org/wiki/Generalized_Stokes_theorem
