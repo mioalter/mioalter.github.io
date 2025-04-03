@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../css/default.css" />
+    </head>
+    <body>
+        <header>
+            <nav>
+                <a href="../">Home</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Posts</a>
+            </nav>
+        </header>
+
+        <main role="main">
+            <article>
+    <section class="header">
+        Posted on March 21, 2025
+        
+    </section>
+    <section>
+        <h1>Never Mess Up Another Integral With This One Weird Trick!</h1>
+        <p>A host on a podcast I was listening to used the phrase “time is a flat circle”
+which got me to thinking about the flat vs. non-flat torus—a circle of circles.
+I considered writing about those, but going from zero to Curvature in one post
+felt like too much.</p>
+<p>Around the same time, I read a blog post about spherical coordinates in
+computer graphics which reminded me of an old gripe I have with multi-variable
+calculus: that there are too many different ways of doing pretty much the same
+things e.g. computing surface areas and volumes
+or formulae that say that the integral of one thing over a region is equal to
+the integral of a related thing over the boundary of that region.
+Doing just a tiny bit of theoretical setup first, makes all of this much simpler.</p>
+<p>This post is a teaser to illustrate how much simpler things get using
+examples that should be familiar to anyone with vague memories of
+calculus: computing the surface area of a sphere and the volume of a ball.</p>
+<p>This post makes no claim to be related to computers, but it does illustrate
+a standard idea in software:
+the importance of using the right abstractions.</p>
+<p>In a feat of Hurculean restraint, I did my best to name some dots and connect
+those dots without going to great lengths to explain the dots.
+As I said, this is a teaser, not a lecture.
+I think, and hope, that in this case, less is more.
+There are ample links and references that I hope the interested reader
+will pursue.</p>
+<p>This is not stuff I think about every day—or haven’t for a long time—and
+thinking about how to present this has made for some enjoyable dog-walking
+conversations (with myself).</p>
+<h1 id="the-sphere">The Sphere</h1>
+<p>Let’s say we want to compute the surface area of a sphere of radius <span class="math inline"><em>R</em> &gt; 0</span>,
+the set of points in <span class="math inline">3</span>-dimensional xyz-space whose coordinates satisify
+<span class="math inline"><em>x</em><sup>2</sup> + <em>y</em><sup>2</sup> + <em>z</em><sup>2</sup> = <em>R</em><sup>2</sup></span>.</p>
+<p>Let’s denote it by <span class="math inline"><em>S</em><sub><em>R</em></sub></span>. We can parameterize <span class="math inline"><em>S</em><sub><em>R</em></sub></span> with the function</p>
+<p><span class="math display"><em>S</em>(<em>u</em>,<em>v</em>) = (<em>R</em>cos(<em>u</em>)sin(<em>v</em>),<em>R</em>sin(<em>u</em>)sin(<em>v</em>),<em>R</em>cos(<em>v</em>))</span></p>
+<p>where <span class="math inline">0 ≤ <em>u</em> &lt; 2<em>π</em></span> and <span class="math inline">0 ≤ <em>v</em> &lt; <em>π</em></span>.</p>
+<p>At a generic point <span class="math inline">(<em>u</em>,<em>v</em>)</span>,
+the partial derivatives <span class="math inline">∂<em>S</em>/∂<em>u</em></span> and
+<span class="math inline">∂<em>S</em>/∂<em>v</em></span> are vectors in xyz-space.
+Let’s abbreviate them as <span class="math inline"><em>S</em><sub><em>u</em></sub></span> and <span class="math inline"><em>S</em><sub><em>v</em></sub></span>, respectively.</p>
+<p>Now, let’s write down a <span class="math inline">2 × 2</span> matrix whose entries are the dot products
+of these vectors with themselves and each other</p>
+<p><span class="math display">$$g(u,v) = \begin{pmatrix}
+S_u \cdot S_u &amp; S_u \cdot S_v \\
+S_v \cdot S_u &amp; S_v \cdot S_v
+\end{pmatrix}
+=\begin{pmatrix}
+R^2\sin^2(v) &amp; 0 \\
+0 &amp; R^2
+\end{pmatrix}$$</span></p>
+<p>Computing these dot products invovles a little algebra and the trig identity
+<span class="math inline">cos<sup>2</sup> + sin<sup>2</sup> = 1</span>.</p>
+<p>So <span class="math inline"><em>g</em>(<em>u</em>,<em>v</em>)</span> is really a function that, to each point <span class="math inline">(<em>u</em>,<em>v</em>)</span>,
+assigns a <span class="math inline">2 × 2</span> matrix. The <a href="https://en.m.wikipedia.org/wiki/Determinant">determinant</a> of this matrix</p>
+<p><span class="math display">det (<em>g</em>(<em>u</em>,<em>v</em>)) = <em>R</em><sup>4</sup>sin<sup>2</sup>(<em>v</em>)</span></p>
+<p>is an ordinary function on uv-space.</p>
+<p>We can now compute the surface area of the sphere as</p>
+<p><span class="math display">$$\int_{S_R}dA
+= \int_0^{\pi}\int_0^{2\pi}\sqrt{\det(g(u,v))} dudv
+=  \int_0^{\pi}\int_0^{2\pi} R^2\sin(v) du dv$$</span></p>
+<p>which is the standard integral to compute the surface area of the sphere
+of radius <span class="math inline"><em>R</em></span>;
+it evaluates to <span class="math inline">4<em>π</em><em>R</em><sup>2</sup></span> as expected.</p>
+<h1 id="the-ball">The Ball</h1>
+<p>Now let’s say we want to compute the volume of the entire ball of radius <span class="math inline"><em>R</em></span>,
+the points whose coordinates satisfy <span class="math inline"><em>x</em><sup>2</sup> + <em>y</em><sup>2</sup> + <em>z</em><sup>2</sup> ≤ <em>R</em></span>.</p>
+<p>Let’s denote the ball by <span class="math inline"><em>B</em><sub><em>R</em></sub></span>. We can parameterize <span class="math inline"><em>B</em><sub><em>R</em></sub></span> by</p>
+<p><span class="math display"><em>T</em>(<em>r</em>,<em>u</em>,<em>v</em>) = (<em>r</em>cos(<em>u</em>)sin(<em>v</em>),<em>r</em>sin(<em>u</em>)sin(<em>v</em>),<em>r</em>cos(<em>v</em>))</span></p>
+<p>where <span class="math inline">0 ≤ <em>r</em> ≤ <em>R</em></span>, <span class="math inline">0 ≤ <em>u</em> &lt; 2<em>π</em></span>, and <span class="math inline">0 ≤ <em>v</em> &lt; <em>π</em></span>.</p>
+<p>The partial derivatives <span class="math inline">∂<em>T</em>/∂<em>r</em></span>,
+<span class="math inline">∂<em>T</em>/∂<em>u</em></span>, and
+<span class="math inline">∂<em>T</em>/∂<em>v</em></span> are again vectors in xyz-space,
+and we can now write down a <span class="math inline">3 × 3</span> matrix whose entries
+are the dot products of these vectors with themselves and each other</p>
+<p><span class="math display">$$g(r, u,v) =
+\begin{pmatrix}
+T_r \cdot T_r &amp; T_r\cdot T_u &amp; T_r\cdot T_v \\
+T_u\cdot T_r &amp; T_u\cdot T_u &amp; T_u\cdot T_v \\
+T_v\cdot T_r &amp; T_v\cdot T_u &amp; T_v\cdot T_v
+\end{pmatrix}
+=\begin{pmatrix}
+1 &amp; 0 &amp; 0 \\
+0 &amp; r^2\sin^2(v) &amp; 0 \\
+0 &amp; 0 &amp; r^2
+\end{pmatrix}$$</span></p>
+<p>using the same shorthand <span class="math inline"><em>T</em><sub><em>r</em></sub></span> for <span class="math inline">∂<em>T</em>/∂<em>r</em></span>, and similarly
+for <span class="math inline"><em>T</em><sub><em>u</em></sub></span> and <span class="math inline"><em>T</em><sub><em>v</em></sub></span>.</p>
+<p>The determinant of this matrix is</p>
+<p><span class="math display">det (<em>g</em>(<em>r</em>,<em>u</em>,<em>v</em>)) = <em>r</em><sup>4</sup>sin<sup>2</sup>(<em>v</em>)</span></p>
+<p>and we can now compute the volume of the ball as</p>
+<p><span class="math display">$$\int_{B_R} dV
+= \int_0^{\pi}\int_{0}^{2\pi}\int_{0}^{R} \sqrt{\det(g(r,u,v))} dr du dv
+= \int_0^{\pi}\int_{0}^{2\pi}\int_{0}^{R} r^2\sin(v) dr du dv
+$$</span></p>
+<p>This is the standard integral to compute the volume of the ball of radius <span class="math inline"><em>R</em></span>;
+it evaluates to <span class="math inline">4<em>π</em><em>R</em><sup>3</sup>/3</span> as expected.</p>
+<h1 id="jacobians">Jacobians</h1>
+<p>Here is one last observation to tie things together.</p>
+<p>Let’s write <span class="math inline"><em>d</em><em>S</em></span> for the Jacobian (or “differential) of <span class="math inline"><em>S</em></span>,
+the matrix whose columns are the partial derivative vectors <span class="math inline"><em>S</em><sub><em>u</em></sub></span> and <span class="math inline"><em>S</em><sub><em>v</em></sub></span>.
+So <span class="math inline"><em>d</em><em>S</em></span> is a <span class="math inline">3 × 2</span> matrix: it is has <span class="math inline">2</span> columns each of which
+is a <span class="math inline">3</span>-dimensional vector. Its transpose <span class="math inline">(<em>d</em><em>S</em>)<sup><em>t</em></sup></span> is the <span class="math inline">2 × 3</span>
+matrix whose <em>rows</em> are the vectors <span class="math inline"><em>S</em><sub><em>u</em></sub></span> and <span class="math inline"><em>S</em><sub><em>v</em></sub></span>.</p>
+<p>We can write our matrix <span class="math inline"><em>g</em></span> in terms of these as</p>
+<p><span class="math display"><em>g</em>(<em>u</em>,<em>v</em>) = (<em>d</em><em>S</em>)<sup><em>t</em></sup><em>d</em><em>S</em></span></p>
+<p>because that’s what a matrix product is:
+the matrix product <span class="math inline"><em>A</em><em>B</em></span> is the matrix whose entries are the rows of <span class="math inline"><em>A</em></span>
+dotted with the columns of <span class="math inline"><em>B</em></span>.
+In this case, the rows of <span class="math inline">(<em>d</em><em>S</em>)<sup><em>t</em></sup></span> and the columns of <span class="math inline"><em>d</em><em>S</em></span> are both
+the vectors <span class="math inline"><em>S</em><sub><em>u</em></sub></span> and <span class="math inline"><em>S</em><sub><em>v</em></sub></span> so this matrix product is the dot products of
+these vectors with themselves and each other.</p>
+<p>The determinant is only defined for square matrices so we cannot take
+the determinant of <span class="math inline"><em>d</em><em>S</em></span>, but we can take the determinant of <span class="math inline"><em>g</em></span>.</p>
+<p>Similarly, in the case of the ball, we can write</p>
+<p><span class="math display"><em>g</em>(<em>r</em>,<em>u</em>,<em>v</em>) = (<em>d</em><em>T</em>)<sup><em>t</em></sup><em>d</em><em>T</em></span></p>
+<p>where <span class="math inline"><em>d</em><em>T</em></span> is the Jacobian of <span class="math inline"><em>T</em></span> and <span class="math inline">(<em>d</em><em>T</em>)<sup><em>t</em></sup></span> is its transpose.
+Using some <a href="https://en.wikipedia.org/wiki/Determinant#Transpose">nice properties of the determinant</a>,
+we see that</p>
+<p><span class="math display">det (<em>g</em>) = det ((<em>d</em><em>T</em>)<sup><em>t</em></sup><em>d</em><em>t</em>) = det ((<em>d</em><em>T</em>)<sup><em>t</em></sup>)det (<em>d</em><em>T</em>) = (det(<em>d</em><em>T</em>))<sup>2</sup></span></p>
+<p>Hopefully this demystifies our volume integral.</p>
+<h1 id="synthesis">Synthesis</h1>
+<p>Clearly these are not the standard ways to define these integrals even though
+we end up with the same thing: in the standard definition of surface area,
+we integrate the magnitude of the cross product <span class="math inline">|<em>S</em><sub><em>u</em></sub>×<em>S</em><sub><em>v</em></sub>|</span> and in the
+standard definition of volume, we integrate the determinant of the Jacobian
+matrix <span class="math inline"><em>d</em><em>T</em></span>
+though in this case we’ve seen that <span class="math inline">$\sqrt{\det(g)} = \det(dT)$</span>.</p>
+<p>The intuition is unchanged, though: if we can parameterize a curved space
+using rectilinear (“Euclidean”) coordinates, then we can measure things
+on the curved space by integrating over rectlinear space,
+we just have to keep track of how rectlinear space gets stretched
+or compressed when it gets mapped onto our curved space.</p>
+<p>There are several advantages to this approach.
+First, it works for spaces of any dimension, that is,
+which can be parameterized by any number of coordinates, not just <span class="math inline">2</span> or <span class="math inline">3</span>.
+Second, although we have appealed to the larger xyz-space that the sphere
+and ball live in in these examples, this approach works without having
+a larger ambient space to appeal to.</p>
+<p>So this “assign a square matrix to every point and integrate
+some function (e.g. the determinant) of that matrix to measure things”
+approach is how you measure things on curved spaces, of any dimension,
+whether or not they come to you embedded in a larger coordinate space,
+that is, it is how you measure things in non-Euclidean geometry.</p>
+<p>The two examples we’ve done are to
+compute the <span class="math inline"><em>n</em></span>-dimension volume of an <span class="math inline"><em>n</em></span>-dimensional curved space
+where <span class="math inline"><em>n</em></span> is <span class="math inline">2</span> and <span class="math inline">3</span>, respectively.
+Mercifully, there is one way to do this that works in all dimensions,
+we don’t need to figure out a new way to do the same thing every time.</p>
+<h1 id="in-the-world">In The World</h1>
+<p>This is where we point to a lot of things without explaining much.</p>
+<p>In the case of the sphere, Gauss (in the 1820s) called <span class="math inline"><em>g</em></span>
+the <a href="https://en.wikipedia.org/wiki/First_fundamental_form">first fundamental form</a>.</p>
+<p>In modern parlance, we would call <span class="math inline"><em>g</em></span> (for a space of any dimension)
+the <a href="https://en.wikipedia.org/wiki/Metric_tensor">metric (tensor)</a>.
+In these examples, since we appealed to the ambient xyz-space,
+the <span class="math inline"><em>g</em></span> we defined is the <a href="https://en.wikipedia.org/wiki/Metric_tensor#Induced_metric">“induced metric”</a>, the metric
+induced by the larger xyz-space in which we are embedded, but, as we said,
+having that larger space is not a requirement.</p>
+<p>A <a href="https://en.wikipedia.org/wiki/Manifold">non-Euclidean space</a> is one that is locally
+<a href="https://en.wikipedia.org/wiki/Euclidean_space">Euclidean</a>, meaning,
+it is covered by patches that can be parameterized by rectilinear / Euclidean
+coordinates.
+At each point, there is a tangent space—the space of velocity vectors of curves
+through that point—and the matrix <span class="math inline"><em>g</em></span> at that point is a dot product on
+that space of tangent vectors.
+So, to really understand everything that is going on here,
+we need to understand the basics of the theory of
+vector spaces—linear algebra—and the basic mechanics of
+(differentiable) non-Euclidean spaces—<a href="https://en.wikipedia.org/wiki/Differentiable_manifold">differentiable manifolds</a>.
+See the next section for some fantastic references.</p>
+<p>If you open a textbook on <a href="https://en.wikipedia.org/wiki/Gravitation_(book)">Gravitation / General Relativity</a>,
+it will start with a statement that goes something like
+“Spacetime is a manifold <span class="math inline"><em>M</em></span> along with a metric <span class="math inline"><em>g</em></span>.
+Gravity is the curvature of this metric.”
+So, that’s what <span class="math inline"><em>g</em></span> is in Physics.</p>
+<h1 id="references">References</h1>
+<ul>
+<li>The unified version of the various
+“the integral of one thing over a region is equal to the integral of a related
+thing over the boundary of that region” formulae is <a href="https://en.wikipedia.org/wiki/Generalized_Stokes_theorem">Stokes’ Theorem</a></li>
+</ul>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </footer>
+    </body>
+</html>

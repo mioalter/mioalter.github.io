@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../css/default.css" />
+    </head>
+    <body>
+        <header>
+            <nav>
+                <a href="../">Home</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Posts</a>
+            </nav>
+        </header>
+
+        <main role="main">
+            <article>
+    <section class="header">
+        Posted on October 25, 2023
+        
+    </section>
+    <section>
+        <h1>Montgomery multplication</h1>
+        <p>Montgomery multiplication is a fast way to compute products in <a href="https://en.wikipedia.org/wiki/Modular_arithmetic">modular arithmetic</a>.
+In general, reducing an integer mod <span class="math inline"><em>N</em></span> requires division which is expensive
+because it uses the division algorithm.
+Montgomery multiplication replaces division by shifting bits which is much faster.
+There are many good references that explain the intuition and core algorithm,
+but none that do the algebra much justice. This post aims to do that.
+This assumes basic familiarity with abstract algebra—groups, rings, and homomorphisms—or the desire to pick these ideas up along the way.</p>
+<p>There is a Scala implementation below and there are references at the end.</p>
+<p>Throughout: let N be a positive odd integer and let <span class="math inline"><em>R</em> = 2<sup><em>r</em></sup></span> be a positive integer power of <span class="math inline">2</span>.</p>
+<h3 id="rings-of-integers-mod-n">Rings of integers mod <span class="math inline"><em>N</em></span></h3>
+<p>The integers mod <span class="math inline"><em>N</em></span> form a <a href="https://en.wikipedia.org/wiki/Ring_(mathematics)">ring</a>,
+the <a href="https://en.wikipedia.org/wiki/Montgomery_modular_multiplication#Modular_arithmetic">quotient ring</a> <span class="math inline">ℤ/<em>N</em>ℤ</span> whose elements are <a href="https://en.wikipedia.org/wiki/Equivalence_relation#Related_important_definitions">equivalence classes</a>
+<span class="math inline">[<em>a</em>], [<em>b</em>], [<em>c</em>]</span> of integers mod <span class="math inline"><em>N</em></span>, addition is given by <span class="math inline">[<em>a</em>] + [<em>b</em>] := [<em>a</em>+<em>b</em>]</span>,
+and multiplication by <span class="math inline">[<em>a</em>][<em>b</em>] := [<em>a</em><em>b</em>]</span>.</p>
+<p>Multiplication by <span class="math inline"><em>R</em></span> defines a function <span class="math inline"><em>R</em> : ℤ/<em>N</em>ℤ → ℤ/<em>N</em>ℤ</span>,
+<span class="math inline"><em>R</em>([<em>a</em>]) = [<em>a</em><em>R</em>]</span>, which is a <em>group</em> homomorphism:</p>
+<ul>
+<li><span class="math inline"><em>R</em>([<em>a</em>]+[<em>b</em>]) = <em>R</em>([<em>a</em>+<em>b</em>]) = [(<em>a</em>+<em>b</em>)<em>R</em>]</span></li>
+<li><span class="math inline"><em>R</em>([<em>a</em>]) + <em>R</em>([<em>b</em>]) = [<em>a</em><em>R</em>] + [<em>b</em><em>R</em>] = [<em>a</em><em>R</em>+<em>b</em><em>R</em>]</span></li>
+</ul>
+<p>and these are equal.</p>
+<p>It is <em>not</em>, however, a <em>ring</em> homomorphism:</p>
+<ul>
+<li><span class="math inline"><em>R</em>([<em>a</em>][<em>b</em>]) = <em>R</em>([<em>a</em><em>b</em>]) = [<em>a</em><em>b</em><em>R</em>]</span></li>
+<li><span class="math inline"><em>R</em>([<em>a</em>])<em>R</em>([<em>b</em>]) = [<em>a</em><em>R</em>][<em>b</em><em>R</em>] = [<em>a</em><em>b</em><em>R</em><sup>2</sup>]</span></li>
+</ul>
+<p>and these are not.</p>
+<p>But all is not lost!
+To quote <a href="https://www.youtube.com/watch?v=Y1En6FKd5Pk">The Great Spicoli</a>: we can fix it.
+We can define a new multiplicative structure with respect to which <span class="math inline"><em>R</em></span>
+<em>is</em> a ring homorphism. But we need something first.</p>
+<p>We said that <span class="math inline"><em>N</em></span> is odd and <span class="math inline"><em>R</em></span> is a power of <span class="math inline">2</span> so <span class="math inline"><em>N</em></span> and <span class="math inline"><em>R</em></span> are
+<a href="https://en.wikipedia.org/wiki/Coprime_integers">relatively prime</a>: their greatest common divisor (GCD) is <span class="math inline">1</span>.
+By <a href="https://en.wikipedia.org/wiki/B%C3%A9zout%27s_identity">Bézout’s identity</a>, there exist integers <span class="math inline"><em>N</em>′</span> and <span class="math inline"><em>R</em>′</span>
+such that we can write <span class="math inline">1 = <em>N</em><em>N</em>′ + <em>R</em><em>R</em>′</span>.
+This means that <span class="math inline"><em>R</em><em>R</em>′</span> is <span class="math inline">1 mod  <em>N</em></span>
+—literally [RR’] = [1] in <span class="math inline">ℤ/<em>N</em>ℤ</span>—
+which means that <span class="math inline"><em>R</em>′</span> is the multplicative inverse of <span class="math inline"><em>R</em></span> in <span class="math inline">ℤ/<em>N</em>ℤ</span>.
+We can find <span class="math inline"><em>N</em>′</span> and <span class="math inline"><em>R</em>′</span> using the <a href="https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended Euclidean algorithm</a>.
+Having said that “there exists an <span class="math inline"><em>R</em>′</span>”, let’s suppose we have found one.
+That’s all we need right now:
+an <span class="math inline"><em>R</em>′</span> which is the multiplicative inverse of <span class="math inline"><em>R</em> mod  <em>N</em></span>[0].</p>
+<p>Now, let’s define a new multiplicative structure.
+To avoid confusion, let’s write <span class="math inline">𝕊ℚ(<em>N</em>)</span> for <span class="math inline">ℤ/<em>N</em>ℤ</span> with its standard addition
+and multiplication[1].
+Let’s write <span class="math inline">𝕄(<em>N</em>)</span> for the <em>Montgomery ring</em> of integers mod <span class="math inline"><em>N</em></span>:
+<span class="math inline">𝕄(<em>N</em>)</span> has the same underlying set and additive structure, but we’ll define
+the product of elements <span class="math inline">[<em>a</em>]</span> and <span class="math inline">[<em>b</em>]</span> to be <span class="math inline">[<em>a</em><em>b</em><em>R</em>′]</span>.</p>
+<p>This trick doesn’t work in genereral! But it does here[2].</p>
+<p>With this multiplicative structure, <span class="math inline"><em>R</em> : 𝕊ℚ(<em>N</em>) → 𝕄(<em>N</em>)</span>
+is a ring homomorphism:</p>
+<ul>
+<li>multiplying in <span class="math inline">𝕊ℚ(<em>N</em>)</span>: <span class="math inline"><em>R</em>([<em>a</em>][<em>b</em>]) = <em>R</em>([<em>a</em><em>b</em>]) = [<em>a</em><em>b</em><em>R</em>]</span></li>
+<li>multiplying in <span class="math inline">𝕄(<em>N</em>)</span>: <span class="math inline"><em>R</em>([<em>a</em>])<em>R</em>([<em>b</em>]) = [<em>a</em><em>R</em>][<em>b</em><em>R</em>] = [<em>a</em><em>b</em><em>R</em><sup>2</sup><em>R</em>′]</span></li>
+</ul>
+<p>and <span class="math inline">[<em>a</em><em>b</em><em>R</em><sup>2</sup><em>R</em>′] = [<em>a</em><em>b</em><em>R</em>(<em>R</em><em>R</em>′)] = [<em>a</em><em>b</em><em>R</em>]</span> because <span class="math inline">[<em>R</em><em>R</em>′] = [1]</span>.</p>
+<p>Moreover, <span class="math inline"><em>R</em></span> is not just a ring homomorphism, it is a ring <em>isomorphism</em>:
+its inverse is given by multiplying by <span class="math inline"><em>R</em>′</span>.</p>
+<p>So, we have an isomorphism of rings. If we can implement multiplication
+in <span class="math inline">𝕄(<em>N</em>)</span> more efficiently than multiplication in <span class="math inline">𝕊ℚ(<em>N</em>)</span> <em>and</em>
+we can implement the transformations to and from <span class="math inline"><em>M</em>(<em>N</em>)</span> efficiently,
+then we can send all the stuff we want to multiply over,
+multiply it there, then send the result back
+and we will have done it all more efficiently than multiplying in <span class="math inline">𝕊ℚ(<em>N</em></span>).</p>
+<h3 id="redc">REDC</h3>
+<p>To multiply in <span class="math inline">𝕄(<em>N</em>)</span>, we have to multiply by <span class="math inline"><em>R</em>′</span> and reduce mod <span class="math inline"><em>N</em></span>.
+The <a href="https://en.wikipedia.org/wiki/Montgomery_modular_multiplication#The_REDC_algorithm">REDC</a> algorithm, “Montgomery reduction”, is a way to do both at once.
+Moreover, it does them by dividing by <span class="math inline"><em>R</em></span> and reducing mod <span class="math inline"><em>R</em></span> rather than by <span class="math inline"><em>N</em></span>.
+Since <span class="math inline"><em>R</em></span> is a power of <span class="math inline">2</span>, both division by <span class="math inline"><em>R</em></span> and reduction mod <span class="math inline"><em>R</em></span>
+can be implemented by simply shifting bits.</p>
+<p>Let’s write <code>redc</code> for a function that implements this algorithm.
+We are going to use it in a few different places, so let’s just say
+that is has type signature <code>redc: Int =&gt; Int</code>
+and be clear about what we are feeding it.</p>
+<p>Elements of <span class="math inline">𝕄(<em>N</em>)</span> are equivalence classes <span class="math inline">[<em>a</em>]</span> and <span class="math inline">[<em>b</em>]</span> of integers mod <span class="math inline"><em>N</em></span>.
+To multiply them in <span class="math inline">𝕄(<em>N</em>)</span>, we compute <span class="math inline">[<em>a</em>][<em>b</em>] = [<em>a</em><em>b</em><em>R</em>′]</span> as <code>redc(a * b)</code>.
+The equivalence class mod <span class="math inline"><em>N</em></span> of <code>redc(a * b)</code> is <span class="math inline">[<em>a</em><em>b</em><em>R</em>′]</span>.</p>
+<p>To transform to <span class="math inline">𝕄(<em>N</em>)</span>, we have to multiply by <span class="math inline"><em>R</em></span> and reduce mod <span class="math inline"><em>N</em></span>.
+Since <code>redc</code> is multiplication by <span class="math inline"><em>R</em>′</span> and reduction mod <span class="math inline"><em>N</em></span>,
+we can implement <span class="math inline"><em>R</em> : 𝕊ℚ(<em>N</em>) → 𝕄(<em>N</em>)</span>
+by computing <span class="math inline"><em>R</em>([<em>a</em>]) = [<em>a</em><em>R</em>]</span> as <code>redc(a * R * R)</code>.
+The equivalence class mod <span class="math inline"><em>N</em></span> of <code>redc(a * R * R)</code> is
+<span class="math inline">[<em>a</em><em>R</em><sup>2</sup><em>R</em>′] = [<em>a</em><em>R</em>(<em>R</em><em>R</em>′)] = [<em>a</em><em>R</em>]</span> since <span class="math inline">[<em>R</em><em>R</em>′] = 1</span>.</p>
+<p>To transform back from <span class="math inline">𝕄(<em>N</em>)</span>, we have to multiply by <span class="math inline"><em>R</em>′</span> and
+reduce mod <span class="math inline"><em>N</em></span> which is just <code>redc</code> again so we can implememnt
+the inverse function <span class="math inline"><em>R</em>′ : 𝕄(<em>N</em>) → 𝕊ℚ(<em>N</em>)</span>
+by computing <span class="math inline"><em>R</em>′([<em>a</em>])] = [<em>a</em><em>R</em>′]</span> as <code>redc(a)</code>.
+The equivalence class mod <span class="math inline"><em>N</em></span> of <code>redc(a)</code> is <span class="math inline">[<em>a</em><em>R</em>′]</span>.</p>
+<h3 id="implementation">Implementation</h3>
+<p>Here <em><em>TODO: ADD LINK</em></em> is a demo Scala implementation.
+It is not meant to be a high-performance anything,
+but it does everything mentioned here.</p>
+<p>Here is a brief walkthrough:</p>
+<ul>
+<li>There is a <code>redc</code> function which implements the REDC algorithm.
+It is ripped straight from the pages of wikipedia.</li>
+<li>There are functions <code>divideByR</code> and <code>modR</code> which implement
+division by <span class="math inline"><em>R</em></span> and reduction mod <span class="math inline"><em>R</em></span>, respectively, by shifting.</li>
+<li>There are <code>SQInt</code> and <code>MInt</code> classes to model the elements of
+<span class="math inline">𝕊ℚ(<em>N</em>)</span> and <span class="math inline">𝕄(<em>N</em>)</span>, respectively</li>
+<li>The transformation to <span class="math inline">𝕄(<em>N</em>)</span> is implemented on the <code>SQInt</code> class
+as <code>toMInt</code>; it uses the <code>redc</code> function.</li>
+<li>The transformation back from <span class="math inline">𝕄(<em>N</em>)</span> is implemented on the <code>MInt</code>
+class as <code>toSQInt</code>; it also uses the <code>redc</code> function.</li>
+<li>There is a class <code>Bezout</code> to compute the Bézout coefficients of a
+pair of integers that contains an implementation of the extended
+Euclidean algorithm.</li>
+</ul>
+<p>Note that, since the transformation to the Montgomery ring involves multiplying
+by <span class="math inline"><em>R</em><sup>2</sup></span>, if <span class="math inline"><em>R</em></span> is large e.g. close to <span class="math inline">2<sup>32</sup></span> or larger, it overflows.
+There is a <a href="https://en.wikipedia.org/wiki/Montgomery_modular_multiplication#Montgomery_arithmetic_on_multiprecision_integers">multiprecision implementation of REDC</a>
+which works in this case, but it is not implemeneted here.</p>
+<h3 id="diffie-hellman">Diffie-Hellman</h3>
+<p><a href="https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange">Diffie-Hellman</a> is a way of doing public key exchange, that is,
+of securely sharing secrets in public.</p>
+<p><a href="https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange#Cryptographic_explanation">The setup is</a>:
+choose a large (necessarily odd) prime <span class="math inline"><em>P</em></span> and form the
+<em>multiplicative group of integers mod <span class="math inline"><em>P</em></span></em>, denoted <span class="math inline">(ℤ/<em>P</em>ℤ)<sup>×</sup></span>.
+(The <span class="math inline">×</span> superscript is for “multiplication”).
+The elements of this group are the equivalence classes of integers mod <span class="math inline"><em>P</em></span>
+which have multiplicative inverses (mod <span class="math inline"><em>P</em></span>).
+As we saw, using Bézout’s identity, this means
+the equivalence classes of integers <span class="math inline">1, 2, …, <em>P</em> − 1</span> which are relatively prime to <span class="math inline"><em>P</em></span>.
+Since <span class="math inline"><em>P</em></span> is prime, this is all of them (though note that we excluded <span class="math inline">0</span>).
+So <span class="math inline">(ℤ/<em>P</em>ℤ)<sup>×</sup></span> has elements <span class="math inline">[1], [2], …, [<em>P</em>−1]</span>.
+Furthermore, this group has a <a href="https://en.wikipedia.org/wiki/Primitive_root_modulo_n"><em>primitive root</em></a>:
+that is, an element <span class="math inline">[<em>g</em>]</span> such that every element of the group is some power of <span class="math inline">[<em>g</em>]</span>,
+i.e. every element is <span class="math inline">[<em>g</em>]<sup><em>k</em></sup></span> (which is <span class="math inline">[<em>g</em><sup><em>k</em></sup>]</span> by definition) for some <span class="math inline"><em>k</em></span>.</p>
+<p>Now, for us to securely share secrets:
+we agree on <span class="math inline"><em>P</em></span> and choose a <span class="math inline">[<em>g</em>]</span>,
+I choose a positive integer <span class="math inline"><em>a</em></span>, you choose a positive <span class="math inline"><em>b</em></span>,
+I send you <span class="math inline">[<em>g</em>]<sup><em>a</em></sup></span>, and you send me <span class="math inline">[<em>g</em>]<sup><em>b</em></sup></span>.
+My private key is <span class="math inline"><em>a</em></span> and my public key is <span class="math inline">[<em>g</em>]<sup><em>a</em></sup></span>,
+your private key is <span class="math inline"><em>b</em></span> and your public key is <span class="math inline"><em>g</em><sup><em>b</em></sup></span>.
+We can each compute our shared secret <span class="math inline">[<em>g</em>]<sup><em>a</em><em>b</em></sup></span>:
+I compute it as <span class="math inline">([<em>g</em>]<sup><em>b</em></sup>)<sup><em>a</em></sup></span> using your public key and my private key,
+you compute it as <span class="math inline">([<em>g</em>]<sup><em>a</em></sup>)<sup><em>b</em></sup></span> using my public key and your private key.
+We each have to compute, on our own, <span class="math inline">([<em>g</em>]<sup><em>a</em><em>b</em></sup>)<sup>−1</sup></span>,
+the multiplicative inverse to our shared secret.
+This exists because every element of our group has an inverse,
+but I don’t know if there is a slick way to do it!
+Having done all of this, to send you the message <span class="math inline">[<em>m</em>]</span>,
+I encrypt it by computing <span class="math inline">[<em>m</em>][<em>g</em>]<sup><em>a</em><em>b</em></sup></span>, send it to you, and you decrypt it
+by computing <span class="math inline">([<em>m</em>][<em>g</em>]<sup><em>a</em><em>b</em></sup>)([<em>g</em>]<sup><em>a</em><em>b</em></sup>)<sup>−1</sup> = [<em>m</em>]([<em>g</em>]<sup><em>a</em><em>b</em></sup>([<em>g</em>]<sup><em>a</em><em>b</em></sup>)<sup>−1</sup>) = <em>m</em></span>.</p>
+<p>The point of all of this is: we have to compute large powers of things mod <span class="math inline"><em>P</em></span>
+which involves a lot of modular multiplication.
+If we can replace all of that modular multiplication in <span class="math inline">𝕊ℚ(<em>P</em>)</span> with
+Montgomery multiplication in <span class="math inline">𝕄(<em>P</em>)</span> by transforming to <span class="math inline">𝕄(<em>P</em>)</span>, multiplying there,
+then transforming back, we can do it all <em>waaaay</em> faster.</p>
+<p>This is all very hand-wavy because I don’t know much about it!
+Can we compute the inverse <span class="math inline"><em>g</em><sup><em>a</em><em>b</em></sup></span> fast?
+How often do we have to recompute these things i.e. how often do <span class="math inline"><em>P</em></span>, <span class="math inline"><em>g</em></span>, <span class="math inline"><em>a</em></span>, and <span class="math inline"><em>b</em></span> change?</p>
+<h3 id="notes">Notes</h3>
+<p>[0] The integers <span class="math inline"><em>N</em>′</span> and <span class="math inline"><em>R</em>′</span> are not unique, but <span class="math inline"><em>R</em>′</span> is unique mod <span class="math inline"><em>N</em></span>:
+we can change <span class="math inline"><em>R</em>′</span> by adding a multiple of <span class="math inline"><em>N</em></span>, then also change <span class="math inline"><em>N</em>′</span>
+by subtracting the corresponding multiple of <span class="math inline"><em>R</em></span>.</p>
+<p>[1] The notation <span class="math inline">𝕊ℚ(<em>N</em>)</span> and <span class="math inline">𝕄(<em>N</em>)</span> is not at all standard and the choice of font
+is frivolous: it just felt like a let down to start with <span class="math inline">ℤ/<em>N</em>ℤ</span> and then
+drop the black board bold font and start writing <span class="math inline"><em>S</em><em>Q</em>(<em>N</em>)</span> and <span class="math inline"><em>M</em>(<em>N</em>)</span>.
+Also, <span class="math inline">𝕄(<em>N</em>)</span> clearly depends on <span class="math inline"><em>R</em></span> and <span class="math inline"><em>R</em>′</span>, too, but they are not included
+in the notation.</p>
+<p>[2] Multiplication has to be associative:
+if <span class="math inline"><em>s</em>, <em>t</em>, <em>u</em></span> are elements of an arbitrary ring, multiplication must satsify
+<span class="math inline">(<em>s</em><em>t</em>)<em>u</em> = <em>s</em>(<em>t</em><em>u</em>)</span>.
+With our definition of multiplication in <span class="math inline">𝕄(<em>N</em>)</span>, we have</p>
+<ul>
+<li><span class="math inline">([<em>a</em>][<em>b</em>])[<em>c</em>] = [<em>a</em><em>b</em><em>R</em>′][<em>c</em>] = [<em>a</em><em>b</em><em>R</em>′<em>c</em><em>R</em>′]</span></li>
+<li><span class="math inline">[<em>a</em>]([<em>b</em>][<em>c</em>]) = [<em>a</em>][<em>b</em><em>c</em><em>R</em>′] = [<em>a</em><em>b</em><em>c</em><em>R</em>′<em>R</em>′]</span></li>
+</ul>
+<p>Multiplication in general need not be commutative—<span class="math inline"><em>s</em><em>t</em> ≠ <em>t</em><em>s</em></span>—but in <span class="math inline">ℤ/<em>N</em>ℤ</span> it is:
+multiplication of integers is commutative so multiplication of integers
+mod <span class="math inline"><em>N</em></span> is commutative. This implies that <span class="math inline">[<em>a</em><em>b</em><em>R</em>′<em>c</em><em>R</em>′] = [<em>a</em><em>b</em><em>c</em><em>R</em>′<em>R</em>′]</span>
+which means that our new definition of multiplication is associative as required.</p>
+<h3 id="thanks-more">Thanks / More</h3>
+<p>Thanks to <a href="https://types.pl/@pittma@tilde.zone">Dan Pittman</a> for turning me onto this topic!
+He encountered this in the wild and <a href="https://tilde.zone/@pittma/111269760709591730">actually fixed some bugs</a>.</p>
+<p>If this algebra stuff seems cool / useful and you don’t already know it</p>
+<ul>
+<li>You can find copies of <a href="https://www.amazon.com/Abstract-Algebra-3rd-David-Dummit/dp/0471433349">Dummit and Foote</a>
+floating around the internet.</li>
+<li><a href="https://www.youtube.com/playlist?list=PLzVTusWerVcIzewg9dQxOKl9_62kTgOgI">Harvard’s entire Abstract Algebra course</a>,
+taught by Benedict Gross, is free on the internet, too.</li>
+<li>That course uses Artin’s Algebra book which you can also find copies of on the internet.</li>
+</ul>
+<h3 id="references">References</h3>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Montgomery_modular_multiplication">Montgomery Multiplication</a> on Wikipedia</li>
+<li><a href="https://codeforces.com/blog/entry/103374">This blog post</a>: I find this a bit terse
+and confusing, but it is one of the things I read.</li>
+<li><a href="https://www.ams.org/journals/mcom/1985-44-170/S0025-5718-1985-0777282-X/S0025-5718-1985-0777282-X.pdf">Montgomery’s original paper</a></li>
+</ul>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </footer>
+    </body>
+</html>
