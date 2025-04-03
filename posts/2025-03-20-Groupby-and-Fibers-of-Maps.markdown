@@ -1,5 +1,5 @@
 ---
-title: `GROUP BY` and Fibers of Maps
+title: GROUP BY and Fibers of Maps
 ---
 
 Grouping a collection of `A`s by the values of some function `f: A -> B`.
