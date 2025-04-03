@@ -173,11 +173,8 @@ polynomial ring where multiplication is really nice—it is a field so everythin
 has a multiplicative inverse—so we can just define a new multiplication on arrays
 of bits by sending them over there, multiplying there, and sending the answer back.
 
-# End
 
-The last thing I wrote to Dan was:
-
-![images][images/sorry.jpg]
+![image][sorry]
 
 
 [AES]: https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
@@ -190,4 +187,4 @@ The last thing I wrote to Dan was:
 [ideal]: https://en.wikipedia.org/wiki/Ideal_(ring_theory)
 [multGF]: https://github.com/pittma/crypto-ref/blob/0cabf4d9c62af993a598616a0e928b23b255044e/src/GF.hs#L17
 [pi]: https://en.wikipedia.org/wiki/Principal_ideal
-
+[sorry]: images/sorry.jpg
