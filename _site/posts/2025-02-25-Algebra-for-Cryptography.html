@@ -25,35 +25,39 @@
         <h1>Algebra For Cryptography I</h1>
         <p>My friend <a href="https://github.com/pittma">Dan</a> texted me a question about the Advanced Encryption Standard (<a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a>)
 algorithm: he was writing a reference implementation in Haskell to check his understanding
-of the implementation in—highly optimized—assembler that he was working with.
+of the implementation in highly optimized assembler that he was working with.
 I know nothing about cryptography, but was game to look at his implementation.
-Something that immediately jumped out was <a href="https://github.com/pittma/crypto-ref/blob/0cabf4d9c62af993a598616a0e928b23b255044e/src/AES/Shared.hs#L10-L14">an integer value named “irrPolynomial”</a>
+Something that immediately jumped out was <a href="https://github.com/pittma/crypto-ref/blob/0cabf4d9c62af993a598616a0e928b23b255044e/src/AES/Shared.hs#L10-L14">an integer value named <code>irrPolynomial</code></a>
 which I took to mean “irreducible polynomial.” This piqued my interest.
-I spent a few days taking peeks at the Handbook of Applied Cryptography—and
+I spent a few days taking peeks at the <a href="https://cacr.uwaterloo.ca/hac/">Handbook of Applied Cryptography</a>—and
 my grad school Abstract Algebra textbook to shake out the cobwebs—
 and thought about this while I was walking the dog or doing dishes.
 I then blasted Dan with an extremely long text thread explaining what
 was going on mathematically and the sequence of steps that got me to that understanding.
-This post is that text thread, very lightly edited.</p>
+This post is that text thread, very lightly edited
+(not every message in that thread had a section title).</p>
 <p>I’ll just add a couple things up front.
 First, I am not an expert and I could easily have made mistakes here!
 Nonetheless, I hope that seeing my reasoning is illuminating.
 Second, if you are not comfortable with equivalence relations and quotient constructions,
-that’s okay! These are advanced undergraduate ideas that most students to not encounter
+that’s okay! These are advanced undergraduate ideas that most students do not encounter
 in their full generality. They are, however, totally ubiquitous in mathematics
 and it is extremely worthwhile to bite the bullet and get comfortable with them.
 I have a previous blog post about them, but feel free to go directly to the source:
 the basic idea is covered in the eleven-and-a-half page “Preliminaries” chapter
 of <a href="https://www.wiley.com/en-us/Abstract+Algebra%2C+3rd+Edition-p-9780471433347">Dummit and Foote</a>. It is worth reading.
 (It covers a bunch of things, it does not use all of that space on this one idea.)
+For anyone who finds the idea of opening a graduate math textbook daunting,
+I have included screenshots of the relevant parts of that section at the end.
 If you would like to find a copy of the book, I would definitely not search on
-the internet for the title of the book and “pdf”. Why waste your time?</p>
+the internet for the names of the authors, title of the book, and “pdf”.
+Why waste your time?</p>
 <h1 id="why">Why?</h1>
 <p>The point of all of this is to answer the question: what do <span class="math inline"><em>n</em></span>-bit binary integers
 have to do with polynomials and why is relating those things to each other at all useful?
 Read on to find out!</p>
 <h1 id="rings-and-ideals">Rings and Ideals</h1>
-<p>If <span class="math inline"><em>R</em></span> is a commutative ring, a subset <span class="math inline"><em>I</em></span> of <span class="math inline"><em>R</em></span> is an <a href="https://en.wikipedia.org/wiki/Ideal_(ring_theory)"><em>ideal</em></a> if it is</p>
+<p>If <span class="math inline"><em>R</em></span> is a <a href="https://en.wikipedia.org/wiki/Ring_(mathematics)">commutative ring</a>, a subset <span class="math inline"><em>I</em> ⊆ <em>R</em></span> is an <a href="https://en.wikipedia.org/wiki/Ideal_(ring_theory)"><em>ideal</em></a> if it is</p>
 <ul>
 <li>closed under addition and multiplication</li>
 <li>has the “absorption” property: anything in <span class="math inline"><em>R</em></span> times anything in <span class="math inline"><em>I</em></span> lands back in <span class="math inline"><em>I</em></span>.</li>
@@ -73,10 +77,10 @@ and the integers mod <span class="math inline"><em>n</em></span> is the quotient
 We usually write this using group and subgroup notation <span class="math inline">ℤ/<em>n</em>ℤ</span> rather than ring
 and ideal notation, but that is what it is.</p>
 <h1 id="fields">Fields</h1>
-<p>A <a href="https://en.wikipedia.org/wiki/Field_(mathematics)">field</a> is basically a ring in which every element has an additive
+<p>A <a href="https://en.wikipedia.org/wiki/Field_(mathematics)">field</a> is more or less a ring in which every element has an additive
 inverse and every non-zero element has a multiplicative inverse.
 So we can add, multiply, subtract, and divide.
-Fields can be finite or infinite.
+Fields can be finite or infinite. Here, we will focus on finite fields.
 If <span class="math inline"><em>p</em></span> is a prime, then <span class="math inline">ℤ/<em>p</em>ℤ</span> is a field. <span class="math inline">ℤ/<em>p</em><sup><em>n</em></sup>ℤ</span>, however, is not a field:
 in this ring, it is possible to multiply together two non-zero numbers,
 e.g. <span class="math inline"><em>p</em></span> and <span class="math inline"><em>p</em><sup><em>n</em> − 1</sup></span>, and get zero.
@@ -85,12 +89,14 @@ this never happens. (Fields are <a href="https://en.wikipedia.org/wiki/Integral_
 <h1 id="questions">Questions</h1>
 <p>We can ask two related questions</p>
 <ol type="1">
-<li>If we have <span class="math inline"><em>n</em></span>-bit binary integers, sure they form a ring, but can we make them into a field?</li>
-<li>If we know that <span class="math inline">ℤ/<em>p</em>ℤ</span> is a field, but that <span class="math inline">ℤ/<em>p</em><sup><em>n</em></sup>ℤ</span> is not, is there a way
-to make more fields by, like, making <span class="math inline"><em>n</em></span>-tuples of field elements into a field?</li>
+<li>If we have <span class="math inline"><em>n</em></span>-bit binary integers, sure they form a ring,
+but can we make them into a field?</li>
+<li>If we know that <span class="math inline">ℤ/<em>p</em>ℤ</span> is a field, but that <span class="math inline">ℤ/<em>p</em><sup><em>n</em></sup>ℤ</span> is not,
+what about <span class="math inline">(ℤ/<em>p</em>ℤ)<sup><em>n</em></sup></span>, the set of <span class="math inline"><em>n</em></span>-tuples of elements of <span class="math inline">ℤ/<em>p</em>ℤ</span>?</li>
 </ol>
-<p>These are related because we can think of <span class="math inline"><em>n</em></span>-bit binary integers as <span class="math inline"><em>n</em></span>-tuples of
-binary digits, that is, of elements of the field <span class="math inline">ℤ/2ℤ</span>.
+<p>These are related because we can think of a bit as an element of <span class="math inline">ℤ/2ℤ</span>
+and we can think of <span class="math inline"><em>n</em></span>-bit binary integers as <span class="math inline"><em>n</em></span>-tuples of these,
+that is, as elements of <span class="math inline">(ℤ/2ℤ)<sup><em>n</em></sup></span>.
 If we want to do the first thing—make those <span class="math inline"><em>n</em></span>-tuples into a field—maybe there is some
 general construction—a way to do the second thing—that will help us out.</p>
 <p>The answer is: there is a way to make <span class="math inline"><em>n</em></span>-tuples of field elements into a field,
@@ -135,7 +141,7 @@ as a product of lower degree polynomials, then this doesn’t happen.
 And, in fact—proof / exercise—if we take the quotient of <span class="math inline">𝔽[<em>x</em>]</span> by the ideal
 generated by <span class="math inline"><em>f</em>(<em>x</em>)</span>, <span class="math inline">𝔽[<em>x</em>]/(<em>f</em>(<em>x</em>))</span>,
 that <em>is</em> a field.
-And if we forget the field structure and just think of it as a vector space,
+And if we forget some of the field structure and just think of it as a vector space,
 this “<em>is</em>” the vector space <span class="math inline">𝔽<sup><em>n</em></sup></span> we started with!
 More specifically: there is a function <span class="math inline"><em>ϕ</em> : 𝔽<sup><em>n</em></sup> → 𝔽[<em>x</em>]/(<em>f</em>(<em>x</em>))</span>,
 defined by <span class="math inline"><em>ϕ</em>(<em>a</em><sub>0</sub>,…,<em>a</em><sub><em>n</em> − 1</sub>) = <em>a</em><sub>0</sub> + <em>a</em><sub>1</sub><em>x</em> + …<em>a</em><sub><em>n</em> − 1</sub><em>x</em><sup><em>n</em> − 1</sup></span>,
@@ -144,12 +150,12 @@ and this function—exercise again—is a vector space isomorphism.</p>
 <h1 id="success">Success</h1>
 <p>So, the punchline is: if we have <span class="math inline"><em>n</em></span>-bit binary integers
 <span class="math inline">[<em>b</em><sub><em>n</em> − 1</sub>,….<em>b</em><sub>0</sub>]</span> and we want to make them into a field,
-we can take the field <span class="math inline">ℤ/2ℤ</span>—also frequently denoted <span class="math inline">𝔽<sub>2</sub></span>—
+we can take the field <span class="math inline">ℤ/2ℤ</span>—also frequently denoted <span class="math inline">𝔽<sub>2</sub></span> or <span class="math inline"><em>G</em><em>F</em>(2)</span>—
 find an irreducible polynomial of degree <span class="math inline"><em>n</em></span>,
 form the field <span class="math inline">𝔽<sub>2</sub>[<em>x</em>]/(<em>f</em>(<em>x</em>))</span>, of polynomials with coeffcients in <span class="math inline">𝔽<sub>2</sub></span>
 (again, just the integers mod 2) by modding out by that irreducible polynomial,
 and think of a <span class="math inline"><em>n</em></span>-bit binary integer as a polynomial
-i.e. <span class="math inline">[<em>b</em><sub><em>n</em> − 1</sub>….<em>b</em><sub>0</sub>] ↔︎ <em>b</em><sub><em>n</em> − 1</sub><em>x</em><sup><em>n</em> − 1</sup> + … + <em>b</em><sub>1</sub><em>x</em> + <em>b</em><sub>0</sub></span>.
+i.e. <span class="math inline">[<em>b</em><sub><em>n</em> − 1</sub>,….<em>b</em><sub>0</sub>] ↔︎ <em>b</em><sub><em>n</em> − 1</sub><em>x</em><sup><em>n</em> − 1</sup> + … + <em>b</em><sub>1</sub><em>x</em> + <em>b</em><sub>0</sub></span>.
 When we do arithmetic in that field, if we want to go back to arrays of bits,
 we have to remember to choose the unique polynomial of degree <span class="math inline"> &lt; <em>n</em></span> equivalent to
 whatever we have before we can map back to an array of bits.
@@ -162,15 +168,45 @@ and we have a bijection of sets <span class="math inline"><em>ϕ</em> : <em>
 then we can make <span class="math inline"><em>S</em></span> into a cool algebraic thing by “pulling back” the operations
 on <span class="math inline"><em>C</em></span>: to perform operations on a pair, say, of elements of <span class="math inline"><em>S</em></span> we just send them
 over to <span class="math inline"><em>C</em></span>, operate there, then send the result back and define that to be how
-operations on <span class="math inline"><em>S</em></span> work.
-So that is what is happening here: we have some operations on arrays of bits of size <span class="math inline"><em>n</em></span>,
+operations on <span class="math inline"><em>S</em></span> work.</p>
+<h1 id="multiplication">Multiplication</h1>
+<p>So that is what is happening here: we have some operations on arrays of bits of size <span class="math inline"><em>n</em></span>,
 but not all the ones we want. We do, however, have a bijection to this fancy
 polynomial ring where multiplication is really nice—it is a field so everything
 has a multiplicative inverse—so we can just define a new multiplication on arrays
 of bits by sending them over there, multiplying there, and sending the answer back.</p>
-<figure>
-<img src="images/sorry.jpg" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
+<p><img src="../images/sorry.jpg" width="550"></p>
+<p>We did not quite say why we even want this fancy multiplication.
+There are two reasons.
+One, taking the multiplicative inverse of something makes the algorithm
+more secure: the bits you get out are a nonlinear function of the bits you put it.
+There are a number of places in the algorithm where a value is mapped to its
+multiplicative inverse, e.g. in the <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard#The_SubBytes_step">SubBytes step</a>.
+Two, even though the entire algorithm is not
+“multiply by something to encrypt, multiply by the inverse to decrypt”
+encryption is a transformation that has to be invertable,
+so wherever multiplication or computing a multiplicative inverse appears,
+you have to be able to invert that step to go the other way.</p>
+<h1 id="hindsight-is-2020">Hindsight is 20/20</h1>
+<p>In retrospect, if I had remembered really anything about <a href="https://en.wikipedia.org/wiki/Finite_field">finite fields</a>,
+I would have understood what was going on almost immediately
+and this would have been a much shorter text thread / post.
+“We want a finite field? Well, every finite field is either <span class="math inline">ℤ/<em>p</em>ℤ</span> or
+<span class="math inline">ℤ/<em>p</em>ℤ[<em>x</em>]</span> mod the ideal generated by an irreducible polynomial!
+That must be what this thing called <code>irrPolynomial</code> is.”
+But, I didn’t. What I did remember is that <span class="math inline">ℤ/<em>p</em>ℤ[<em>x</em>]</span> mod any polynomial
+of degree <span class="math inline"><em>n</em></span> is an <span class="math inline"><em>n</em></span>-dimensional vector space with basis <span class="math inline">1, <em>x</em>, …, <em>x</em><sup><em>n</em> − 1</sup></span>.
+Fortunately, that was enough to get me asking questions that pointed me in the
+right direction.
+Alternatively, I could have just looked up stuff and read it, but I was not in a
+rush and it was much more fun to answer my own questions.</p>
+<h1 id="appendix">Appendix</h1>
+<p>The notation <span class="math inline"><em>n</em>|(<em>b</em>−<em>a</em>)</span> means “<span class="math inline"><em>n</em></span> divides <span class="math inline"><em>b</em> − <em>a</em></span>”.</p>
+<p><img src="../images/dm1.png" width="550">
+<img src="../images/dm2.png" width="550">
+<img src="../images/dm3.png" width="550">
+<img src="../images/dm4.png" width="550">
+<img src="../images/dm5.png" width="550"></p>
     </section>
 </article>
 

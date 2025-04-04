@@ -7,30 +7,34 @@ title: Algebra For Cryptography I
 
 My friend [Dan][Dan] texted me a question about the Advanced Encryption Standard ([AES][AES])
 algorithm: he was writing a reference implementation in Haskell to check his understanding
-of the implementation in—highly optimized—assembler that he was working with.
+of the implementation in highly optimized assembler that he was working with.
 I know nothing about cryptography, but was game to look at his implementation.
-Something that immediately jumped out was [an integer value named "irrPolynomial"][DanAES]
+Something that immediately jumped out was [an integer value named `irrPolynomial`][DanAES]
 which I took to mean "irreducible polynomial." This piqued my interest.
-I spent a few days taking peeks at the Handbook of Applied Cryptography—and
+I spent a few days taking peeks at the [Handbook of Applied Cryptography][HAC]—and
 my grad school Abstract Algebra textbook to shake out the cobwebs—
 and thought about this while I was walking the dog or doing dishes.
 I then blasted Dan with an extremely long text thread explaining what
 was going on mathematically and the sequence of steps that got me to that understanding.
-This post is that text thread, very lightly edited.
+This post is that text thread, very lightly edited
+(not every message in that thread had a section title).
 
 I'll just add a couple things up front.
 First, I am not an expert and I could easily have made mistakes here!
 Nonetheless, I hope that seeing my reasoning is illuminating.
 Second, if you are not comfortable with equivalence relations and quotient constructions,
-that's okay! These are advanced undergraduate ideas that most students to not encounter
+that's okay! These are advanced undergraduate ideas that most students do not encounter
 in their full generality. They are, however, totally ubiquitous in mathematics
 and it is extremely worthwhile to bite the bullet and get comfortable with them.
 I have a previous blog post about them, but feel free to go directly to the source:
 the basic idea is covered in the eleven-and-a-half page "Preliminaries" chapter
 of [Dummit and Foote][DandF]. It is worth reading.
 (It covers a bunch of things, it does not use all of that space on this one idea.)
+For anyone who finds the idea of opening a graduate math textbook daunting,
+I have included screenshots of the relevant parts of that section at the end.
 If you would like to find a copy of the book, I would definitely not search on
-the internet for the title of the book and "pdf". Why waste your time?
+the internet for the names of the authors, title of the book, and "pdf".
+Why waste your time?
 
 # Why?
 
@@ -40,7 +44,7 @@ Read on to find out!
 
 # Rings and Ideals
 
-If $R$ is a commutative ring, a subset $I$ of $R$ is an [_ideal_][ideal] if it is
+If $R$ is a [commutative ring][ring], a subset $I\subseteq R$ is an [_ideal_][ideal] if it is
 
 * closed under addition and multiplication
 * has the "absorption" property: anything in $R$ times anything in $I$ lands back in $I$.
@@ -64,10 +68,10 @@ and ideal notation, but that is what it is.
 
 
 # Fields
-A [field][field] is basically a ring in which every element has an additive
+A [field][field] is more or less a ring in which every element has an additive
 inverse and every non-zero element has a multiplicative inverse.
 So we can add, multiply, subtract, and divide.
-Fields can be finite or infinite.
+Fields can be finite or infinite. Here, we will focus on finite fields.
 If $p$ is a prime, then $\Z/p\Z$ is a field. $\Z/p^n\Z$, however, is not a field:
 in this ring, it is possible to multiply together two non-zero numbers,
 e.g. $p$ and $p^{n-1}$, and get zero.
@@ -77,12 +81,14 @@ this never happens. (Fields are [_integral domains_][id].)
 # Questions
 We can ask two related questions
 
-1. If we have $n$-bit binary integers, sure they form a ring, but can we make them into a field?
-2. If we know that $\Z/p\Z$ is a field, but that $\Z/p^n\Z$ is not, is there a way
-to make more fields by, like, making $n$-tuples of field elements into a field?
+1. If we have $n$-bit binary integers, sure they form a ring,
+but can we make them into a field?
+2. If we know that $\Z/p\Z$ is a field, but that $\Z/p^n\Z$ is not,
+what about $(\Z/p\Z)^n$, the set of $n$-tuples of elements of $\Z/p\Z$?
 
-These are related because we can think of $n$-bit binary integers as $n$-tuples of
-binary digits, that is, of elements of the field $\Z/2\Z$.
+These are related because we can think of a bit as an element of $\Z/2\Z$
+and we can think of $n$-bit binary integers as $n$-tuples of these,
+that is, as elements of $(\Z/2\Z)^n$.
 If we want to do the first thing—make those $n$-tuples into a field—maybe there is some
 general construction—a way to do the second thing—that will help us out.
 
@@ -135,7 +141,7 @@ as a product of lower degree polynomials, then this doesn’t happen.
 And, in fact—proof / exercise—if we take the quotient of $\F[x]$ by the ideal
 generated by $f(x)$, $\F[x] / (f(x))$,
 that _is_ a field.
-And if we forget the field structure and just think of it as a vector space,
+And if we forget some of the field structure and just think of it as a vector space,
 this "_is_" the vector space $\F^n$ we started with!
 More specifically: there is a function $\phi: \F^n \to \F[x]/(f(x))$,
 defined by $\phi(a_0,\ldots,a_{n-1}) = a_0 + a_1 x + \ldots a_{n-1} x^{n-1}$,
@@ -146,12 +152,12 @@ and this function—exercise again—is a vector space isomorphism.
 
 So, the punchline is: if we have $n$-bit binary integers
 $[b_{n-1}, \ldots.b_0]$ and we want to make them into a field,
-we can take the field $\Z/2\Z$—also frequently denoted $\F_2$—
+we can take the field $\Z/2\Z$—also frequently denoted $\F_2$ or $GF(2)$—
 find an irreducible polynomial of degree $n$,
 form the field $\F_2[x] / (f(x))$, of polynomials with coeffcients in $\F_2$
 (again, just the integers mod 2) by modding out by that irreducible polynomial,
 and think of a $n$-bit binary integer as a polynomial
-i.e. $[b_{n-1}….b_0] \leftrightarrow b_{n-1}x^{n-1} + \ldots + b_1 x + b_0$.
+i.e. $[b_{n-1},\ldots.b_0] \leftrightarrow b_{n-1}x^{n-1} + \ldots + b_1 x + b_0$.
 When we do arithmetic in that field, if we want to go back to arrays of bits,
 we have to remember to choose the unique polynomial of degree $< n$ equivalent to
 whatever we have before we can map back to an array of bits.
@@ -167,15 +173,54 @@ then we can make $S$ into a cool algebraic thing by “pulling back” the opera
 on $C$: to perform operations on a pair, say, of elements of $S$ we just send them
 over to $C$, operate there, then send the result back and define that to be how
 operations on $S$ work.
+
+# Multiplication
+
 So that is what is happening here: we have some operations on arrays of bits of size $n$,
 but not all the ones we want. We do, however, have a bijection to this fancy
 polynomial ring where multiplication is really nice—it is a field so everything
 has a multiplicative inverse—so we can just define a new multiplication on arrays
 of bits by sending them over there, multiplying there, and sending the answer back.
 
+<img src="/images/sorry.jpg" width=550>
 
-![image][sorry]
+We did not quite say why we even want this fancy multiplication.
+There are two reasons.
+One, taking the multiplicative inverse of something makes the algorithm
+more secure: the bits you get out are a nonlinear function of the bits you put it.
+There are a number of places in the algorithm where a value is mapped to its
+multiplicative inverse, e.g. in the [SubBytes step][subbytes].
+Two, even though the entire algorithm is not
+"multiply by something to encrypt, multiply by the inverse to decrypt"
+encryption is a transformation that has to be invertable,
+so wherever multiplication or computing a multiplicative inverse appears,
+you have to be able to invert that step to go the other way.
 
+
+# Hindsight is 20/20
+
+In retrospect, if I had remembered really anything about [finite fields][ff],
+I would have understood what was going on almost immediately
+and this would have been a much shorter text thread / post.
+"We want a finite field? Well, every finite field is either $\Z/p\Z$ or
+$\Z/p\Z[x]$ mod the ideal generated by an irreducible polynomial!
+That must be what this thing called `irrPolynomial` is."
+But, I didn't. What I did remember is that $\Z/p\Z[x]$ mod any polynomial
+of degree $n$ is an $n$-dimensional vector space with basis $1, x, \ldots, x^{n-1}$.
+Fortunately, that was enough to get me asking questions that pointed me in the
+right direction.
+Alternatively, I could have just looked up stuff and read it, but I was not in a
+rush and it was much more fun to answer my own questions.
+
+# Appendix
+
+The notation $n \vert (b-a)$ means "$n$ divides $b-a$".
+
+<img src="/images/dm1.png" width=550>
+<img src="/images/dm2.png" width=550>
+<img src="/images/dm3.png" width=550>
+<img src="/images/dm4.png" width=550>
+<img src="/images/dm5.png" width=550>
 
 [AES]: https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
 [consequences]: https://en.wikipedia.org/wiki/Field_(mathematics)#Consequences_of_the_definition
@@ -183,8 +228,12 @@ of bits by sending them over there, multiplying there, and sending the answer ba
 [DanAES]: https://github.com/pittma/crypto-ref/blob/0cabf4d9c62af993a598616a0e928b23b255044e/src/AES/Shared.hs#L10-L14
 [DandF]: https://www.wiley.com/en-us/Abstract+Algebra%2C+3rd+Edition-p-9780471433347
 [field]: https://en.wikipedia.org/wiki/Field_(mathematics)
+[ff]: https://en.wikipedia.org/wiki/Finite_field
 [id]: https://en.wikipedia.org/wiki/Integral_domain
 [ideal]: https://en.wikipedia.org/wiki/Ideal_(ring_theory)
+[HAC]: https://cacr.uwaterloo.ca/hac/
 [multGF]: https://github.com/pittma/crypto-ref/blob/0cabf4d9c62af993a598616a0e928b23b255044e/src/GF.hs#L17
 [pi]: https://en.wikipedia.org/wiki/Principal_ideal
+[ring]: https://en.wikipedia.org/wiki/Ring_(mathematics)
 [sorry]: images/sorry.jpg
+[subbytes]: https://en.wikipedia.org/wiki/Advanced_Encryption_Standard#The_SubBytes_step
