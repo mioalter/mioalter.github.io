@@ -176,6 +176,12 @@ operations on $S$ work.
 
 # Multiplication
 
+_*TODO_: point out that $n$-bit binary integers are already a ring, $\Z/n\Z$,
+but one that is not a field, so we are throwing out those operations,
+and making new ones (where addition is xor and multiplication is multiplication of polynomials).
+It might be worth pointing that out up in the "Questions" secion, too:
+we already have a ring structure, but is it a field? No.
+
 So that is what is happening here: we have some operations on arrays of bits of size $n$,
 but not all the ones we want. We do, however, have a bijection to this fancy
 polynomial ring where multiplication is really nice—it is a field so everything
