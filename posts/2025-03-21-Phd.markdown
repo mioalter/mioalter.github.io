@@ -6,3 +6,24 @@ cf. geometry literature seminar
 2. being okay being confused
 3. extreme skepticism / need to convince yourself
 "this diagram _should_ commute"
+
+
+# Telling Technical Stories
+
+# Driving By Smell
+
+# Spidey Sense
+
+aka extreme skepticism.
+
+## Commutative Diagrams
+"this _should_ commute"
+
+## Pullbacks
+
+aka implicit dependencies e.g. $f: A \to B$, $g: B \to C$, $h: B \times C \to D$,
+but what is actually computed is $h\circ (f,g): A \to D$;
+special case $f = id$.
+So now there is an implicit dependency between the two arguments of $h$: they
+are both transformations of _the same_ value.
+Example with functions $\mathbb R \to \mathbb R$.
