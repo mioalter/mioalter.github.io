@@ -167,6 +167,10 @@ So we just proved our principle using that
 Is there a _Principle of the Bit-Level Equivalence of Addition_, too?
 You bet, same idea, no need to do arithmetic in $U_w$ or $T_w$ to prove it.
 
+# One Step Further
+
+(pull the ring structure back to $B_w$)
+
 # The One Neat Trick
 
-# Up and Away
+# To Algebra and Beyond
